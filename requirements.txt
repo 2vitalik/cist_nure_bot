@@ -1,0 +1,6 @@
+python-telegram-bot
+PyYAML
+requests
+
+git+ssh://git@github.com/2vitalik/coda-docs.git
+git+ssh://git@github.com/2vitalik/shared_utils.git
