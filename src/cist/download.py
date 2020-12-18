@@ -1,5 +1,6 @@
 import requests
-from shared_utils.io.io import write
+from shared_utils.common.dt import dtf
+from shared_utils.io.io import write, write_changed
 
 import conf
 
@@ -13,7 +14,12 @@ def download_cist(groups, date_from, date_to, group_slug):
 
     filename = f'{conf.data_path}/{group_slug}.csv'
     content = requests.get(url).content.decode('cp1251')
-    write(filename, content)  # todo: backup if changed?
+    if write_changed(filename, content):
+        day_slug = dtf('Ymd')
+        time_slug = dtf('dts')
+        backup_filename = \
+            f'{conf.data_path}/{day_slug}/{group_slug}_{time_slug}.csv'
+        write(backup_filename, content)
 
 
 if __name__ == '__main__':
