@@ -1,8 +1,10 @@
 from collections import defaultdict
 
 from shared_utils.io.io import read
+from shared_utils.io.json import json_dump_changed, json_dump
 
 import conf
+from src.utils.filename import get_filenames
 
 
 def check_unexpected_value(name, value, correct):
@@ -11,7 +13,8 @@ def check_unexpected_value(name, value, correct):
 
 
 def parse_csv(group_slug):
-    csv_filename = f'{conf.data_path}/{group_slug}.csv'
+    path = f'{conf.data_path}/cist'
+    csv_filename = f'{path}/{group_slug}.csv'
 
     groups = set()
     subjects = set()
@@ -26,7 +29,7 @@ def parse_csv(group_slug):
         '18:25:00': 7,
     }
 
-    data = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    records = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
     content = read(csv_filename)
     for line in content.split('\n')[1:]:
@@ -61,7 +64,7 @@ def parse_csv(group_slug):
                 raise ValueError(f"Room should end with comma: '{room}'")
             room = room.rstrip(',')
 
-            data[group][date_from][time_from].append(
+            records[group][date_from][time_from].append(
                 (subject, kind, f"{room}, {room_2}")
             )
         else:
@@ -70,11 +73,23 @@ def parse_csv(group_slug):
                 subject, kind, room, group_detailed = part.split(' ')
                 subjects.add(subject)
 
-                data[group][date_from][time_from].append(
+                records[group][date_from][time_from].append(
                     (subject, kind, room)
                 )
 
-    return data, groups, subjects
+    return records, sorted(groups), sorted(subjects)
+
+
+def save_parsed(group_slug, records, groups, subjects):
+    path = f'{conf.data_path}/cist'
+
+    for data_slug, data_value in zip(['records', 'groups', 'subjects'],
+                                     [records, groups, subjects]):
+        active_filename, backup_filename = \
+            get_filenames(path, f'{group_slug}_{data_slug}', 'json')
+
+        if json_dump_changed(active_filename, data_value):
+            json_dump(backup_filename, data_value)
 
 
 if __name__ == '__main__':
