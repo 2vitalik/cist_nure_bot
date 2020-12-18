@@ -12,7 +12,7 @@ def download_cist(groups, date_from, date_to, group_slug):
           f'&Aid_potok=0&ADateStart={date_from}&ADateEnd={date_to}' \
           f'&AMultiWorkSheet=0'
 
-    content = requests.get(url).content.decode('cp1251')
+    content = requests.get(url).content.decode('cp1251').replace('\r', '\n')
 
     path = f'{conf.data_path}/cist'
     active_filename, backup_filename = get_filenames(path, group_slug, 'csv')
