@@ -3,6 +3,7 @@ from shared_utils.io.io import write, write_changed
 
 import conf
 from src.utils.filename import get_filenames
+from src.utils.slack import slack_status
 
 
 def download_cist(groups, date_from, date_to, group_slug):
@@ -18,6 +19,7 @@ def download_cist(groups, date_from, date_to, group_slug):
     active_filename, backup_filename = get_filenames(path, group_slug, 'csv')
 
     if write_changed(active_filename, content):
+        slack_status(f'cist changed: csv')
         write(backup_filename, content)
 
 

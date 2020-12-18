@@ -5,6 +5,7 @@ from shared_utils.io.json import json_dump_changed, json_dump
 
 import conf
 from src.utils.filename import get_filenames
+from src.utils.slack import slack_status
 
 
 def check_unexpected_value(name, value, correct):
@@ -89,6 +90,7 @@ def save_parsed(group_slug, records, groups, subjects):
             get_filenames(path, f'{group_slug}_{data_slug}', 'json')
 
         if json_dump_changed(active_filename, data_value):
+            slack_status(f'cist changed: {data_slug}')
             json_dump(backup_filename, data_value)
 
 
