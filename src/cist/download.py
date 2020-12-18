@@ -6,7 +6,7 @@ from src.utils.filename import get_filenames
 from src.utils.slack import slack_status
 
 
-def download_cist(groups, date_from, date_to, group_slug):
+def download_cist(groups, date_from, date_to, potok_slug):
     url = f'https://cist.nure.ua/ias/app/tt/' \
           f'WEB_IAS_TT_GNR_RASP.GEN_GROUP_POTOK_RASP' \
           f'?ATypeDoc=3&Aid_group={groups}' \
@@ -16,7 +16,7 @@ def download_cist(groups, date_from, date_to, group_slug):
     content = requests.get(url).content.decode('cp1251').replace('\r', '\n')
 
     path = f'{conf.data_path}/cist'
-    active_filename, backup_filename = get_filenames(path, group_slug, 'csv')
+    active_filename, backup_filename = get_filenames(path, potok_slug, 'csv')
 
     if write_changed(active_filename, content):
         slack_status(f'cist changed: csv')

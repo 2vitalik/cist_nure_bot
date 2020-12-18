@@ -11,9 +11,9 @@ def check_unexpected_value(name, value, correct):
         raise ValueError(f"Unexpected `{name}`: '{value}' != '{correct}'")
 
 
-def parse_cist_csv(group_slug):
+def parse_cist_csv(potok_slug):
     path = f'{conf.data_path}/cist'
-    csv_filename = f'{path}/{group_slug}.csv'
+    csv_filename = f'{path}/{potok_slug}.csv'
 
     groups = set()
     subjects = set()
@@ -79,10 +79,10 @@ def parse_cist_csv(group_slug):
     return records, sorted(groups), sorted(subjects)
 
 
-def save_cist_parsed(group_slug, records, groups, subjects):
+def save_cist_parsed(potok_slug, records, groups, subjects):
     path = f'{conf.data_path}/cist'
 
-    dump_json_data(path, group_slug, kind='cist',
+    dump_json_data(path, potok_slug, kind='cist',
                    names=['records', 'groups', 'subjects'],
                    values=[records, groups, subjects])
 
