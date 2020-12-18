@@ -11,7 +11,7 @@ def check_unexpected_value(name, value, correct):
         raise ValueError(f"Unexpected `{name}`: '{value}' != '{correct}'")
 
 
-def parse_csv(group_slug):
+def parse_cist_csv(group_slug):
     path = f'{conf.data_path}/cist'
     csv_filename = f'{path}/{group_slug}.csv'
 
@@ -79,7 +79,7 @@ def parse_csv(group_slug):
     return records, sorted(groups), sorted(subjects)
 
 
-def save_parsed(group_slug, records, groups, subjects):
+def save_cist_parsed(group_slug, records, groups, subjects):
     path = f'{conf.data_path}/cist'
 
     dump_json_data(path, group_slug, kind='cist',
@@ -88,4 +88,4 @@ def save_parsed(group_slug, records, groups, subjects):
 
 
 if __name__ == '__main__':
-    parse_csv('pzpi-19')
+    parse_cist_csv('pzpi-19')
