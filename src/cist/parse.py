@@ -1,11 +1,9 @@
 from collections import defaultdict
 
 from shared_utils.io.io import read
-from shared_utils.io.json import json_dump_changed, json_dump
 
 import conf
-from src.utils.filename import get_filenames
-from src.utils.slack import slack_status
+from src.utils.dump import dump_json_data
 
 
 def check_unexpected_value(name, value, correct):
@@ -84,14 +82,9 @@ def parse_csv(group_slug):
 def save_parsed(group_slug, records, groups, subjects):
     path = f'{conf.data_path}/cist'
 
-    for data_slug, data_value in zip(['records', 'groups', 'subjects'],
-                                     [records, groups, subjects]):
-        active_filename, backup_filename = \
-            get_filenames(path, f'{group_slug}_{data_slug}', 'json')
-
-        if json_dump_changed(active_filename, data_value):
-            slack_status(f'cist changed: {data_slug}')
-            json_dump(backup_filename, data_value)
+    dump_json_data(path, group_slug, kind='cist',
+                   names=['records', 'groups', 'subjects'],
+                   values=[records, groups, subjects])
 
 
 if __name__ == '__main__':
