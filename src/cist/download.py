@@ -1,8 +1,8 @@
 import requests
-from shared_utils.common.dt import dtf
 from shared_utils.io.io import write, write_changed
 
 import conf
+from src.utils.filename import get_filenames
 
 
 def download_cist(groups, date_from, date_to, group_slug):
@@ -12,13 +12,12 @@ def download_cist(groups, date_from, date_to, group_slug):
           f'&Aid_potok=0&ADateStart={date_from}&ADateEnd={date_to}' \
           f'&AMultiWorkSheet=0'
 
-    filename = f'{conf.data_path}/{group_slug}.csv'
     content = requests.get(url).content.decode('cp1251')
-    if write_changed(filename, content):
-        day_slug = dtf('Ymd')
-        time_slug = dtf('dts')
-        backup_filename = \
-            f'{conf.data_path}/{day_slug}/{group_slug}_{time_slug}.csv'
+
+    path = f'{conf.data_path}/cist'
+    active_filename, backup_filename = get_filenames(path, group_slug, 'csv')
+
+    if write_changed(active_filename, content):
         write(backup_filename, content)
 
 
