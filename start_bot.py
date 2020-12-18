@@ -2,6 +2,7 @@ import logging
 
 from telegram import Bot
 from telegram.ext import Updater, MessageHandler, Filters
+from shared_utils.conf import conf as shared_conf
 
 import conf
 from bot.main import MainHandler
@@ -12,6 +13,7 @@ def start_bot():
         level=logging.DEBUG,
         format='[%(asctime)s] %(levelname)s (%(name)s):  %(message)s'
     )
+    shared_conf.slack_hooks = conf.slack_hooks
 
     bot = Bot(conf.telegram_token)
     bot.send_message(chat_id=conf.telegram_admin, text='💬 Starting the bot...')
