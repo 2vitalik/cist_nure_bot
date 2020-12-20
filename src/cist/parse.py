@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from shared_utils.io.io import read
+from shared_utils.io.json import json_load
 
 import conf
 from src.utils.dump import dump_json_data
@@ -85,6 +86,16 @@ def save_cist_parsed(potok_slug, records, groups, subjects):
     dump_json_data(path, potok_slug, kind='cist',
                    names=['records', 'groups', 'subjects'],
                    values=[records, groups, subjects])
+
+
+def load_cist_parsed(potok_slug):
+    path = f'{conf.data_path}/cist'
+
+    records = json_load(f'{path}/{potok_slug}_records.json')
+    groups = json_load(f'{path}/{potok_slug}_groups.json')
+    subjects = json_load(f'{path}/{potok_slug}_subjects.json')
+
+    return records, groups, subjects
 
 
 if __name__ == '__main__':
