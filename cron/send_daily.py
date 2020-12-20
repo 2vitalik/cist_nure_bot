@@ -1,3 +1,4 @@
+import up  # to go to root folder
 from datetime import datetime, timedelta
 
 from shared_utils.conf import conf as shared_conf

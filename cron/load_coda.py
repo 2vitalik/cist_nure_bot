@@ -1,3 +1,5 @@
+import up  # to go to root folder
+
 from shared_utils.conf import conf as shared_conf
 
 import conf
