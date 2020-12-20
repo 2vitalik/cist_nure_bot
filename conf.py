@@ -18,6 +18,10 @@ groups = {
                '7706315_7706393_7985980_7985982_7706507',
 }
 
+channels = {  # should be set in `local_conf.py`
+    'ПЗПІ-19-3': None,
+}
+
 data_path = 'data'
 
 try:

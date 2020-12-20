@@ -4,6 +4,7 @@ from shared_utils.io.io import read
 from shared_utils.io.json import json_load
 
 import conf
+from src.data.const import times
 from src.utils.dump import dump_json_data
 
 
@@ -18,16 +19,6 @@ def parse_cist_csv(potok_slug):
 
     groups = set()
     subjects = set()
-
-    times = {
-        '07:45:00': 1,
-        '09:30:00': 2,
-        '13:10:00': 3,
-        '11:15:00': 4,
-        '14:55:00': 5,
-        '16:40:00': 6,
-        '18:25:00': 7,
-    }
 
     records = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
 
