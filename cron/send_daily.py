@@ -51,7 +51,7 @@ def send_daily():
                     line = prettify_lesson(*lesson)
                     message += f'▫️<code>     </code>   {line}\n'
         else:
-            message += f'🔆 Схоже занять немає\n'
+            message += f'🔆 Схоже, занять немає\n'
         return message
 
     now = datetime.now()
