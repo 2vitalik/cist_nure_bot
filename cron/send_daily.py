@@ -17,7 +17,8 @@ def prettify_lesson(subject, kind, room):
         'лб': '⚙️',
     }
     icon = icons.get(kind, '❔')
-    return f'{icon} ({kind}) <b>{subject}</b> → {room}'
+    room_suffix = f' → {room}' if room else ''
+    return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}'
 
 
 def send_daily():
