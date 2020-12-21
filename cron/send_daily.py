@@ -23,8 +23,6 @@ def prettify_lesson(subject, kind, room):
 
 def send_daily():
     def send_weekly():
-        now = datetime.now()
-        is_sunday = now.weekday() == 6
         if not is_sunday:
             raise Exception('...')
         n = 17  # fixme
