@@ -11,7 +11,9 @@ def load_data():
 
     records = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for entry in records_entries:
-        group, date_from, time_from, subject, kind, room = entry
-        records[group][date_from][time_from].append((subject, kind, room))
+        group, date_from, time_from, subject, kind, room, comment = entry
+        records[group][date_from][time_from].append(
+            (subject, kind, room, comment)
+        )
 
     return records

@@ -26,6 +26,6 @@ def get_records_from_coda(potok_slug=None):
             continue
         records.append((
             entry['Группа'], dt_text(entry['Дата']), dt_text(entry['Время']),
-            entry['Предмет'], entry['Вид'], entry['Ауд'],
+            entry['Предмет'], entry['Вид'], entry['Ауд'], entry['Комментарий'],
         ))
     return records

@@ -1,7 +1,7 @@
 from src.data.const import times
 
 
-def prettify_lesson(subject, kind, room):
+def prettify_lesson(subject, kind, room, comment):
     icons = {
         'лк': '💬',
         'пз': '💡',
@@ -10,7 +10,8 @@ def prettify_lesson(subject, kind, room):
     }
     icon = icons.get(kind, '❔')
     room_suffix = f' → {room}' if room else ''
-    return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}'
+    comment_line = f'\n✍️ {comment}' if comment else ''
+    return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}{comment_line}'
 
 
 def prettify_time_slot(day_table, time_key):
