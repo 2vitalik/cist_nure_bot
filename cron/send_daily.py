@@ -5,27 +5,16 @@ from shared_utils.conf import conf as shared_conf
 from telegram import Bot, ParseMode
 
 import conf
-from src.data.const import times
 from src.data.load import load_data
+from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
-
-
-def prettify_lesson(subject, kind, room):
-    icons = {
-        'лк': '💬',
-        'пз': '💡',
-        'лб': '⚙️',
-    }
-    icon = icons.get(kind, '❔')
-    room_suffix = f' → {room}' if room else ''
-    return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}'
 
 
 def send_daily():
     def send_weekly():
         if not is_sunday:
             raise Exception('...')
-        n = 17  # fixme
+        n = 18  # fixme
         message = f'📆 <b>Розклад на {n}-й тиждень</b>\n\n'
         for delta in range(1, 7):
             day = now + timedelta(days=delta)
@@ -43,13 +32,7 @@ def send_daily():
         day_table = data[group][day_key]
         if day_table:
             for time_from in sorted(day_table):
-                lessons = list(reversed(day_table[time_from]))
-                number = times.get(time_from, '*️⃣')
-                line = prettify_lesson(*lessons[0])
-                message += f'{number} <code>{time_from[:5]}</code>: {line}\n'
-                for lesson in lessons[1:]:
-                    line = prettify_lesson(*lesson)
-                    message += f'▫️<code>     </code>   {line}\n'
+                message += prettify_time_slot(day_table, time_from)
         else:
             message += f'🔆 Схоже, занять немає\n'
         return message
