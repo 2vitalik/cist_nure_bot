@@ -7,7 +7,7 @@ from src.coda.dump import dump_coda
 from src.utils.slack import slack
 
 
-@slack('load_cist')
+@slack('load_coda')
 def load_coda():
     dump_coda()
 
