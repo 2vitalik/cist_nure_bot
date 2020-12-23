@@ -18,14 +18,17 @@ def get_groups_from_coda():
     return groups
 
 
-def get_records_from_coda(potok_slug=None):
+def get_records_from_coda(potok_slug=None, no_comment=False):
     records = list()
     entries = coda_records.rows_dict()
     for entry in entries.values():
         if potok_slug and potok_slug != entry['potok_slug']:
             continue
-        records.append((
+        value = (
             entry['Группа'], dt_text(entry['Дата']), dt_text(entry['Время']),
             entry['Предмет'], entry['Вид'], entry['Ауд'], entry['Комментарий'],
-        ))
+        )
+        if no_comment:
+            value = value[:-1]  # without comment
+        records.append(value)
     return records

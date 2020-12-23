@@ -10,7 +10,7 @@ from src.utils.slack import slack_status, slack_error
 def update_coda(potok_slug, new_records, new_groups, new_subjects):
     old_subjects = get_subjects_from_coda()
     old_groups = get_groups_from_coda()
-    old_records = get_records_from_coda(potok_slug)
+    old_records = get_records_from_coda(potok_slug, no_comment=True)
 
     for subject in new_subjects:
         if subject not in old_subjects:
