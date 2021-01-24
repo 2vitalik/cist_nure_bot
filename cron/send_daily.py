@@ -15,7 +15,7 @@ def send_daily():
         if not is_sunday:
             raise Exception('...')
         n = 18  # fixme
-        message = f'📆 <b>Розклад на {n}-й тиждень</b>\n\n'
+        message = f'📆 <b>Розклад на тиждень</b>\n\n'  # todo: {n}-й
         for delta in range(1, 7):
             day = now + timedelta(days=delta)
             message += pretty_day(day, in_week=True) + '\n'
