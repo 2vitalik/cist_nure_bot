@@ -20,7 +20,9 @@ def send_daily():
             day = now + timedelta(days=delta)
             message += pretty_day(day, in_week=True) + '\n'
         message += '#тиждень'
-        bot.send_message(channel_id, message, parse_mode=ParseMode.HTML)
+        bot.send_message(channel_id, '📁')
+        bot.send_message(channel_id, message, parse_mode=ParseMode.HTML,
+                         disable_web_page_preview=True)  # todo: everywhere
 
     def pretty_day(day, in_week=False):
         day_key = day.strftime('%Y/%m/%d')
@@ -45,6 +47,7 @@ def send_daily():
         if is_sunday:
             send_weekly()
         message = pretty_day(tomorrow) + '\n#день'
+        bot.send_message(channel_id, '📝')
         bot.send_message(channel_id, message, parse_mode=ParseMode.HTML)
 
 
