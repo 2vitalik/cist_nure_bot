@@ -7,6 +7,7 @@ def prettify_lesson(subject, kind, room, comment):
         'пз': '💡',
         'лб': '⚙️',
         'кс': '❓',
+        'ісп': '💢',
     }
     icon = icons.get(kind, '❔')
     room_suffix = f' → {room}' if room else ''
