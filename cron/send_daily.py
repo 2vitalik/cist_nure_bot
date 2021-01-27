@@ -30,7 +30,8 @@ def send_daily():
         if in_week:
             message = f'▪️ {day_prettify}\n'
         else:
-            message = f'📆 Розклад на {day_prettify}\n\n'
+            message = f'📆 Розклад на завтра\n\n' \
+                      f'▪️ {day_prettify}\n'
         day_table = data[group][day_key]
         if day_table:
             for time_from in sorted(day_table):
