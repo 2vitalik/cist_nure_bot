@@ -14,7 +14,7 @@ def check_unexpected_value(name, value, correct):
 
 
 def parse_cist_csv(potok_slug):
-    path = f'{conf.data_path}/cist'
+    path = f'{conf.data_path}/cist/csv'
     csv_filename = f'{path}/{potok_slug}.csv'
 
     groups = set()
@@ -100,7 +100,7 @@ def save_cist_parsed(potok_slug, records, groups, subjects):
 
 
 def load_cist_parsed(potok_slug):
-    path = f'{conf.data_path}/cist'
+    path = f'{conf.data_path}/cist/json'
 
     records = json_load(f'{path}/{potok_slug}_records.json')
     groups = json_load(f'{path}/{potok_slug}_groups.json')
