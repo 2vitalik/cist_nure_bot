@@ -3,8 +3,8 @@ from src.data.const import times
 
 def prettify_lesson(subject, kind, room, comment):
     icons = {
-        'лк': '💬',
-        'пз': '💡',
+        'лк': '📖',
+        'пз': '💬',
         'лб': '⚙️',
         'кс': '❓',
         'ісп': '💢',
