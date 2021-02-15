@@ -7,7 +7,7 @@ def get_subjects_from_coda():
     entries = coda_subjects.rows_dict()
     for entry in entries.values():
         subjects.append(entry['Сокращение'])
-    return subjects
+    return sorted(subjects)
 
 
 def get_groups_from_coda():
@@ -15,7 +15,7 @@ def get_groups_from_coda():
     entries = coda_groups.rows_dict()
     for entry in entries.values():
         groups.append(entry['Название'])
-    return groups
+    return sorted(groups)
 
 
 def get_records_from_coda(potok_slug=None, no_comment=False):
@@ -31,4 +31,4 @@ def get_records_from_coda(potok_slug=None, no_comment=False):
         if no_comment:
             value = value[:-1]  # without comment
         records.append(value)
-    return records
+    return sorted(records)
