@@ -1,4 +1,5 @@
 import requests
+from shared_utils.common.dt import dtf
 from shared_utils.io.io import write, write_changed
 
 import conf
@@ -17,6 +18,20 @@ def download_cist(groups, date_from, date_to, potok_slug):
 
     path = f'{conf.data_path}/cist'
     active_filename, backup_filename = get_filenames(path, potok_slug, 'csv')
+
+    error_patterns = [
+        'Запрашиваемый документ в разработке',
+        'Service Temporarily Unavailable',
+        '502 Bad Gateway',
+    ]
+    for error_pattern in error_patterns:
+        if error_pattern in content:
+            time_slug = dtf('dts')
+            error_filename = f'{path}/errors/{potok_slug}__{time_slug}.csv'
+            write(error_filename, content)
+            slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
+                         f' `{potok_slug}`: *"{error_pattern}"*')
+            return
 
     if write_changed(active_filename, content):
         slack_status(f'cist changed: csv')
