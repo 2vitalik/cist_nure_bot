@@ -10,5 +10,5 @@ def dump_json_data(path, potok_slug, kind, names, values):
             get_filenames(path, f'{potok_slug}_{data_slug}', 'json')
 
         if json_dump_changed(active_filename, data_value):
-            slack_status(f'{kind} changed: {data_slug}')
+            slack_status(f'✔️ *{kind}/json* changes in `{data_slug}`')
             json_dump(backup_filename, data_value)

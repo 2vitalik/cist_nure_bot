@@ -34,7 +34,7 @@ def download_cist(groups, date_from, date_to, potok_slug):
             return
 
     if write_changed(active_filename, content):
-        slack_status(f'cist changed: csv')
+        slack_status(f'✔️ *cist/csv* data has changed for `{potok_slug}`')
         write(backup_filename, content)
 
 
