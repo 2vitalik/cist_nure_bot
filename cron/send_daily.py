@@ -1,3 +1,5 @@
+import time
+
 import up  # to go to root folder
 from datetime import datetime, timedelta
 
@@ -58,6 +60,7 @@ def send_daily():
             tg_send(channel_id, f'{message}\n#день')
         else:
             slack_status(f'No items for {group}')  # todo
+        time.sleep(0.5)
 
 
 if __name__ == '__main__':
