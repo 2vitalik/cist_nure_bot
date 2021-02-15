@@ -41,6 +41,9 @@ def parse_cist_csv(potok_slug):
         check_unexpected_value('col11', col11, "Обычная")
         check_unexpected_value('col13', col13, "Обычный")
 
+        day, month, year = date_from.split('.')
+        date_from = f'{year}-{month}-{day}'
+
         group, rest = title.split(' - ')
         groups.add(group)
 
