@@ -1,72 +1,172 @@
+import time
 from datetime import datetime
 
+import conf
+from src.cist.parse import load_cist_parsed
 from src.coda.get import get_subjects_from_coda, get_groups_from_coda, \
     get_records_from_coda
 from src.coda.vars import coda_records, coda_subjects, coda_groups
-from src.data.const import kinds
+from src.data.const import kinds, times
+from src.data.load import group_records
+from src.msgs.prettify import prettify_lesson
+from src.utils.date import prettify_date
 from src.utils.slack import slack_status, slack_error
+from src.utils.tg import tg_send
 
 
-def update_coda(potok_slug, new_records, new_groups, new_subjects):
-    old_subjects = get_subjects_from_coda()
-    old_groups = get_groups_from_coda()
-    old_records = get_records_from_coda(potok_slug, no_comment=True)
+def group_slot(rows, source):
+    slot = {}
+    for row in rows:
+        if source == 'cist':
+            subject, kind, room = row
+            new_kind = kinds.get(kind, kind)
+            if new_kind == kind:
+                # never should happen
+                slack_error(f'🚫 Unknown kind: "{kind}"')
+            coda_id = '?'
+            kind = new_kind
+        elif source == 'coda':
+            coda_id, subject, kind, room, comment = row
+        else:
+            raise Exception('Never should happen in `group_slot`')
 
-    for subject in new_subjects:
-        if subject not in old_subjects:
-            slack_status(f'Adding subject to coda: "{subject}"')
-            coda_subjects.append({'Сокращение': subject,
-                                  'potok_slug': potok_slug})
+        key = (subject, kind)
+        if key in slot:
+            # never should happen
+            slack_error(f'🚫 Several rooms for the slot: "{key}"')
 
-    for group in new_groups:
-        if group not in old_groups:
-            slack_status(f'Adding group to coda: "{group}"')
-            spec, year, num = group.split('-')
-            coda_groups.append({'Спец': spec, "Год": year, "Номер": num,
-                                'potok_slug': potok_slug})
+        slot[key] = (coda_id, room)
+    return slot
 
-    # todo: also process removals of groups and subjects? (mark as removed)
 
-    # todo: make some refactoring below
-    for group in sorted(new_records):
-        print('=' * 100)
-        print(group)
-        for date_from in sorted(new_records[group]):
-            print('-' * 100)
-            print(date_from)
-            date_coda = \
-                datetime.strptime(date_from, "%d.%m.%Y").strftime("%Y/%m/%d")
-            for time_from in sorted(new_records[group][date_from]):
-                print('-', time_from)
-                rows = new_records[group][date_from][time_from]
-                for subject, kind, room in rows:
-                    print(' ', subject, kind, room)
+def prettify_line(time_key, subject, kind, room, comment=''):
+    number = times.get(time_key, '*️⃣')
+    line = prettify_lesson(subject, kind, room, comment, sep='  ')
+    message = f'{number} <code>{time_key[:5]}</code>: {line}'
+    return message
 
-                    new_kind = kinds.get(kind, kind)
-                    if kind == new_kind:
-                        slack_error(f'Unknown kind: {kind}')
 
-                    new_record = \
-                        (group, date_coda, time_from, subject, new_kind, room)
-                    if new_record in old_records:
-                        old_records.remove(new_record)
-                        continue
-                    slack_status(f'Adding record to coda:\n'
-                                 f'• {group}\n'
-                                 f'• {date_coda} {time_from}\n'
-                                 f'• {subject}, {new_kind}, {room}')
-                    # todo: send also to telegram group channel
-                    coda_records.append({
-                        "Группа": group,
-                        "Дата": date_coda,
-                        "Время": time_from,
-                        "Предмет": subject,
-                        "Вид": new_kind,
-                        "Ауд": room,
-                        "potok_slug": potok_slug,
-                        "sys": True,
-                    })
-        #             break
-        #         break
-        #     break
-        # break
+def update_coda():
+    all_old_subjects = get_subjects_from_coda()
+    all_old_groups = get_groups_from_coda()
+    all_old_records = get_records_from_coda()
+
+    # fixme: this is just for faster debugging...
+    # from shared_utils.io.json import json_load
+    # all_old_records = \
+    #     json_load(f'{conf.data_path}/coda/json/all_records.json')
+
+    for potok_slug in conf.groups:
+        old_subjects = [subject
+                        for subject, old_potok_slug in all_old_subjects
+                        if potok_slug in old_potok_slug]
+        old_groups = [group
+                      for group, old_potok_slug in all_old_groups
+                      if old_potok_slug == potok_slug]
+        old_records = [(*values, old_potok_slug)
+                       for *values, old_potok_slug in all_old_records
+                       if old_potok_slug == potok_slug]
+        old_records = group_records(old_records)
+
+        new_records, new_groups, new_subjects = load_cist_parsed(potok_slug)
+
+        for subject in new_subjects:
+            if subject not in old_subjects:
+                slack_status(f'➕ `{potok_slug}`  new subject: *"{subject}"*')
+                coda_subjects.append({'Сокращение': subject,
+                                      'potok_slug': potok_slug})
+        removed_subjects = set(old_subjects) - set(new_subjects)
+        for subject in removed_subjects:
+            slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
+            # todo: mark as "removed" in coda?
+
+        for group in new_groups:
+            if group not in old_groups:
+                slack_status(f'➕ `{potok_slug}`  new group: "{group}"')
+                spec, year, num = group.split('-')
+                coda_groups.append({'Спец': spec, "Год": year, "Номер": num,
+                                    'potok_slug': potok_slug})
+        removed_groups = set(old_groups) - set(new_groups)
+        for subject in removed_groups:
+            slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
+            # todo: mark as "removed" in coda?
+
+        for group in sorted(new_records):
+            print('=' * 100)
+            print(group)
+            channel_id = conf.channels[group]
+
+            for date_from in sorted(new_records[group]):
+                print('-' * 100)
+                print(date_from)
+                day = datetime.strptime(date_from, "%Y-%m-%d")
+                date_coda = day.strftime("%Y/%m/%d")
+                day_prettify = prettify_date(day)
+                header = f'⚠️ Зміна в розкладі\n\n' \
+                         f'▪️ {day_prettify}'
+                changes = ''
+
+                for time_from in sorted(new_records[group][date_from]):
+                    print('-', time_from)
+
+                    old_rows = old_records[group][date_coda][time_from]
+                    new_rows = new_records[group][date_from][time_from]
+
+                    old_slot = group_slot(old_rows, 'coda')
+                    new_slot = group_slot(new_rows, 'cist')
+
+                    for (subject, kind) in old_slot:
+                        if (subject, kind) not in new_slot:
+                            coda_id, room = old_slot[(subject, kind)]
+                            slack_status(f'❌ `{potok_slug}`  remove lesson: '
+                                         f'*{group} '
+                                         f' 📆 {date_from} '
+                                         f' ⏱ {time_from} '
+                                         f' 📝 {subject}, {kind}, {room}*')
+                            coda_records.update(coda_id, {"removed": True})
+                            line = prettify_line(time_from, subject, kind, room)
+                            changes += f'❌ {line}\n'
+                            time.sleep(0.5)
+
+                    for (subject, kind) in new_slot:
+                        if (subject, kind) not in old_slot:
+                            coda_id, room = new_slot[(subject, kind)]
+                            slack_status(f'❇️ `{potok_slug}`  new lesson: '
+                                         f'*{group} '
+                                         f' 📆 {date_from} '
+                                         f' ⏱ {time_from} '
+                                         f' 📝 {subject}, {kind}, {room}*')
+                            coda_records.append({
+                                "Группа": group,
+                                "Дата": date_coda,
+                                "Время": time_from,
+                                "Предмет": subject,
+                                "Вид": kind,
+                                "Ауд": room,
+                                "potok_slug": potok_slug,
+                                "sys": True,
+                            })
+                            line = prettify_line(time_from, subject, kind, room)
+                            changes += f'❇️ {line}\n'
+                            time.sleep(0.5)
+
+                    for (subject, kind) in old_slot:
+                        if (subject, kind) in new_slot:
+                            coda_id, old_room = old_slot[(subject, kind)]
+                            _______, new_room = new_slot[(subject, kind)]
+                            if old_room != new_room:
+                                slack_status(
+                                    f'🌀 `{potok_slug}`  change lesson: '
+                                    f'*{group} '
+                                    f' 📆 {date_from}  ⏱ {time_from} '
+                                    f' 📝 {subject}, {kind}, '
+                                    f' "{old_room}" → "{new_room}"*')
+                                coda_records.update(coda_id, {"Ауд": new_room})
+                                line = prettify_line(time_from, subject, kind,
+                                                     old_room)
+                                changes += f'🌀 {line} → {new_room}\n'
+                                time.sleep(0.5)
+
+                if changes:
+                    tg_send(channel_id, f'{header}\n{changes}')
+                    slack_status('✔️ _Sent to telegram-channel_')

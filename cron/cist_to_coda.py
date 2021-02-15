@@ -3,15 +3,13 @@ import up  # to go to root folder
 from shared_utils.conf import conf as shared_conf
 
 import conf
-from src.cist.parse import load_cist_parsed
 from src.coda.update import update_coda
 from src.utils.slack import slack
 
 
 @slack('cist_to_coda')
 def cist_to_coda():
-    for potok_slug in conf.groups:
-        update_coda(potok_slug, *load_cist_parsed(potok_slug))
+    update_coda()
 
 
 if __name__ == '__main__':
