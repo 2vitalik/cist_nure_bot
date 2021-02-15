@@ -92,13 +92,13 @@ def update_coda():
             # todo: mark as "removed" in coda?
 
         for group in sorted(new_records):
-            print('=' * 100)
-            print(group)
+            # print('=' * 100)
+            # print(group)
             channel_id = conf.channels[group]
 
             for date_from in sorted(new_records[group]):
-                print('-' * 100)
-                print(date_from)
+                # print('-' * 100)
+                # print(date_from)
                 day = datetime.strptime(date_from, "%Y-%m-%d")
                 date_coda = day.strftime("%Y/%m/%d")
                 day_prettify = prettify_date(day)
@@ -107,7 +107,7 @@ def update_coda():
                 changes = ''
 
                 for time_from in sorted(new_records[group][date_from]):
-                    print('-', time_from)
+                    # print('-', time_from)
 
                     old_rows = old_records[group][date_coda][time_from]
                     new_rows = new_records[group][date_from][time_from]
