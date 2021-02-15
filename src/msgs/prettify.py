@@ -1,7 +1,7 @@
 from src.data.const import times
 
 
-def prettify_lesson(subject, kind, room, comment):
+def prettify_lesson(subject, kind, room, comment, sep=' → '):
     icons = {
         'лк': '📖',
         'пз': '💬',
@@ -10,7 +10,7 @@ def prettify_lesson(subject, kind, room, comment):
         'ісп': '💢',
     }
     icon = icons.get(kind, '❔')
-    room_suffix = f' → {room}' if room else ''
+    room_suffix = f'{sep}{room}' if room else ''
     comment_line = f'\n✍️ {comment}' if comment else ''
     return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}{comment_line}'
 
