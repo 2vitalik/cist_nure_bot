@@ -1,4 +1,5 @@
 import up  # to go to root folder
+from datetime import datetime
 
 from shared_utils.conf import conf as shared_conf
 
@@ -13,6 +14,8 @@ def cist_to_coda():
 
 
 if __name__ == '__main__':
+    print(datetime.now())
+
     shared_conf.slack_hooks = conf.slack_hooks
     cist_to_coda()
 

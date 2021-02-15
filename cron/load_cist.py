@@ -1,4 +1,5 @@
 import up  # to go to root folder
+from datetime import datetime
 
 from shared_utils.conf import conf as shared_conf
 
@@ -16,5 +17,7 @@ def load_cist():
 
 
 if __name__ == '__main__':
+    print(datetime.now())
+
     shared_conf.slack_hooks = conf.slack_hooks
     load_cist()

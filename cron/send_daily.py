@@ -64,5 +64,7 @@ def send_daily():
 
 
 if __name__ == '__main__':
+    print(datetime.now())
+
     shared_conf.slack_hooks = conf.slack_hooks
     send_daily()
