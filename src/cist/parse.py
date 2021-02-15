@@ -49,6 +49,13 @@ def parse_cist_csv(potok_slug):
 
         check_unexpected_value('col12', col12, rest)
 
+        # todo: fix this in a good way:
+        rest = rest.replace('*БПС (', '*БПС(')
+        rest = rest.replace('*ОсBI (', '*ОсBI(')
+        rest = rest.replace('*ОSMM (', '*ОSMM(')
+        rest = rest.replace('*А (advance)', '*А(advance)')
+        rest = rest.replace('*ПМЗ (', '*ПМЗ(')
+
         values = rest.split(' ')
         if len(values) == 5:
             subject, kind, room, room_2, group_detailed = values
