@@ -2,11 +2,11 @@ import up  # to go to root folder
 from datetime import datetime, timedelta
 
 from shared_utils.conf import conf as shared_conf
-from telegram import Bot, ParseMode
 
 import conf
 from src.msgs.prettify import prettify_time_slot
 from src.data.load import load_records
+from src.utils.tg import tg_send
 
 
 def send_lesson():
@@ -19,10 +19,9 @@ def send_lesson():
         day_table = data[group][day_key]
         if time_key in day_table:
             message = prettify_time_slot(day_table, time_key)
-            bot.send_message(channel_id, message, parse_mode=ParseMode.HTML)
+            tg_send(channel_id, message)
 
 
 if __name__ == '__main__':
-    bot = Bot(conf.telegram_token)
     shared_conf.slack_hooks = conf.slack_hooks
     send_lesson()

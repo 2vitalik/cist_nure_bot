@@ -2,12 +2,12 @@ import up  # to go to root folder
 from datetime import datetime, timedelta
 
 from shared_utils.conf import conf as shared_conf
-from telegram import Bot, ParseMode
 
 import conf
 from src.data.load import load_records
 from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
+from src.utils.tg import tg_send
 
 
 def send_daily():
@@ -20,9 +20,8 @@ def send_daily():
             day = now + timedelta(days=delta)
             message += pretty_day(day, in_week=True) + '\n'
         message += '#тиждень'
-        bot.send_message(channel_id, '📁')
-        bot.send_message(channel_id, message, parse_mode=ParseMode.HTML,
-                         disable_web_page_preview=True)  # todo: everywhere
+        tg_send(channel_id, '📁')
+        tg_send(channel_id, message)
 
     def pretty_day(day, in_week=False):
         day_key = day.strftime('%Y/%m/%d')
@@ -48,11 +47,10 @@ def send_daily():
         if is_sunday:
             send_weekly()
         message = pretty_day(tomorrow) + '\n#день'
-        bot.send_message(channel_id, '📝')
-        bot.send_message(channel_id, message, parse_mode=ParseMode.HTML)
+        tg_send(channel_id, '📝')
+        tg_send(channel_id, message)
 
 
 if __name__ == '__main__':
-    bot = Bot(conf.telegram_token)
     shared_conf.slack_hooks = conf.slack_hooks
     send_daily()
