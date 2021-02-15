@@ -68,7 +68,17 @@ def parse_cist_csv(potok_slug):
                     (subject, kind, room)
                 )
 
-    return records, sorted(groups), sorted(subjects)
+    # sort all levels of records:
+    sorted_records = {}
+    for group in sorted(records):
+        sorted_records[group] = {}
+        for date_from in sorted(records[group]):
+            sorted_records[group][date_from] = {}
+            for time_from in sorted(records[group][date_from]):
+                sorted_records[group][date_from][time_from] = \
+                    sorted(records[group][date_from][time_from])
+
+    return sorted_records, sorted(groups), sorted(subjects)
 
 
 def save_cist_parsed(potok_slug, records, groups, subjects):
