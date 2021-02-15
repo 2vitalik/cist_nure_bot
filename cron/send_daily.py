@@ -19,7 +19,8 @@ def send_daily():
         message = f'📆 <b>Розклад на тиждень</b>\n\n'  # todo: {n}-й
         for delta in range(1, 7):
             day = now + timedelta(days=delta)
-            message += pretty_day(day, in_week=True) + '\n'
+            sub_message, has_items = pretty_day(day, in_week=True)
+            message += f'{sub_message}\n'
         message += '#тиждень'
         tg_send(channel_id, '📁')
         tg_send(channel_id, message)
