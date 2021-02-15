@@ -7,6 +7,7 @@ import conf
 from src.data.load import load_records
 from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
+from src.utils.slack import slack_status
 from src.utils.tg import tg_send
 
 
@@ -31,13 +32,15 @@ def send_daily():
         else:
             message = f'📆 Розклад на завтра\n\n' \
                       f'▪️ {day_prettify}\n'
+        has_items = False
         day_table = data[group][day_key]
         if day_table:
             for time_from in sorted(day_table):
                 message += prettify_time_slot(day_table, time_from)
+            has_items = True
         else:
             message += f'🔆 Схоже, занять немає\n'
-        return message
+        return message, has_items
 
     now = datetime.now()
     is_sunday = now.weekday() == 6
@@ -46,9 +49,14 @@ def send_daily():
     for group, channel_id in conf.channels.items():
         if is_sunday:
             send_weekly()
-        message = pretty_day(tomorrow) + '\n#день'
-        tg_send(channel_id, '📝')
-        tg_send(channel_id, message)
+        # todo: if saturday then send only if there are some lessons...
+        #  (the same for holidays, and perhaps for saturdays for some groups)..
+        message, has_items = pretty_day(tomorrow)
+        if has_items:
+            tg_send(channel_id, '📝')
+            tg_send(channel_id, f'{message}\n#день')
+        else:
+            slack_status(f'No items for {group}')  # todo
 
 
 if __name__ == '__main__':
