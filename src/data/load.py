@@ -8,8 +8,9 @@ import conf
 def group_records(entries):
     records = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for entry in entries:
-        group, date_from, time_from, subject, kind, room, comment = entry
-        value = (subject, kind, room, comment)
+        coda_id, group, date_from, time_from, \
+            subject, kind, room, comment, potok_slug = entry
+        value = (coda_id, subject, kind, room, comment)
         records[group][date_from][time_from].append(value)
     return records
 
