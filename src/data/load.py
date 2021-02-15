@@ -5,7 +5,7 @@ from shared_utils.io.json import json_load
 import conf
 
 
-def load_data():
+def load_records():
     path = f'{conf.data_path}/coda'
     records_entries = json_load(f'{path}/all_records.json')
 

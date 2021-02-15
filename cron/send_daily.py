@@ -5,7 +5,7 @@ from shared_utils.conf import conf as shared_conf
 from telegram import Bot, ParseMode
 
 import conf
-from src.data.load import load_data
+from src.data.load import load_records
 from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
 
@@ -43,7 +43,7 @@ def send_daily():
     now = datetime.now()
     is_sunday = now.weekday() == 6
     tomorrow = now + timedelta(days=1)
-    data = load_data()
+    data = load_records()
     for group, channel_id in conf.channels.items():
         if is_sunday:
             send_weekly()

@@ -6,7 +6,7 @@ from telegram import Bot, ParseMode
 
 import conf
 from src.msgs.prettify import prettify_time_slot
-from src.data.load import load_data
+from src.data.load import load_records
 
 
 def send_lesson():
@@ -14,7 +14,7 @@ def send_lesson():
     day_key = now.strftime('%Y/%m/%d')
     time_key = now.strftime('%H:%M:00')
 
-    data = load_data()
+    data = load_records()
     for group, channel_id in conf.channels.items():
         day_table = data[group][day_key]
         if time_key in day_table:
