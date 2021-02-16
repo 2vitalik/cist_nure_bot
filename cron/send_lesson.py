@@ -1,3 +1,5 @@
+import time
+
 import up  # to go to root folder
 from datetime import datetime, timedelta
 
@@ -20,6 +22,7 @@ def send_lesson():
         if time_key in day_table:
             message = prettify_time_slot(day_table, time_key)
             tg_send(channel_id, message)
+            time.sleep(1)
 
 
 if __name__ == '__main__':

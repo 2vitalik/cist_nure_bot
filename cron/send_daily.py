@@ -60,7 +60,7 @@ def send_daily():
             tg_send(channel_id, f'{message}\n#день')
         else:
             slack_status(f'No items for {group}')  # todo
-        time.sleep(0.5)
+        time.sleep(1.5)
 
 
 if __name__ == '__main__':
