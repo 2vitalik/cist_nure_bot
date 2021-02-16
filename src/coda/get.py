@@ -22,7 +22,7 @@ def get_records_from_coda():
     records = list()
     entries = coda_records.rows_dict()
     for coda_id, entry in entries.items():
-        if entry['removed']:
+        if entry['removed'] or not entry['visible']:
             continue
         value = (
             coda_id,
