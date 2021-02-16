@@ -170,3 +170,45 @@ def update_coda():
                 if changes:
                     tg_send(channel_id, f'{header}\n{changes}')
                     slack_status('✔️ _Sent to telegram-channel_')
+
+        for group in sorted(old_records):
+            # print('=' * 100)
+            # print(group)
+            channel_id = conf.channels[group]
+
+            for date_coda in sorted(old_records[group]):
+                # print('-' * 100)
+                # print(date_from)
+                day = datetime.strptime(date_coda, "%Y/%m/%d")
+                date_from = day.strftime("%Y-%m-%d")
+                day_prettify = prettify_date(day)
+                header = f'⚠️ Зміна в розкладі\n\n' \
+                         f'▪️ {day_prettify}'
+                changes = ''
+
+                for time_from in sorted(old_records[group][date_coda]):
+                    # print('-', time_from)
+
+                    old_rows = old_records[group][date_coda][time_from]
+                    new_rows = new_records.get(group, {}).get(date_from, {}).\
+                        get(time_from, [])
+
+                    old_slot = group_slot(old_rows, 'coda')
+                    new_slot = group_slot(new_rows, 'cist')
+
+                    for (subject, kind) in old_slot:
+                        if (subject, kind) not in new_slot:
+                            coda_id, room = old_slot[(subject, kind)]
+                            slack_status(f'❌ `{potok_slug}`  remove lesson: '
+                                         f'*{group} '
+                                         f' 📆 {date_from} '
+                                         f' ⏱ {time_from} '
+                                         f' 📝 {subject}, {kind}, {room}*')
+                            coda_records.update(coda_id, {"removed": True})
+                            line = prettify_line(time_from, subject, kind, room)
+                            changes += f'❌ {line}\n'
+                            time.sleep(0.5)
+
+                if changes:
+                    tg_send(channel_id, f'{header}\n{changes}')
+                    slack_status('✔️ _Sent to telegram-channel_')
