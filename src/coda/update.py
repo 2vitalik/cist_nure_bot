@@ -131,7 +131,7 @@ def update_coda():
                     for (subject, kind) in new_slot:
                         if (subject, kind) not in old_slot:
                             coda_id, room = new_slot[(subject, kind)]
-                            slack_status(f'❇️ `{potok_slug}`  new lesson: '
+                            slack_status(f'➕ `{potok_slug}`  new lesson: '
                                          f'*{group} '
                                          f' 📆 {date_from} '
                                          f' ⏱ {time_from} '
@@ -147,7 +147,7 @@ def update_coda():
                                 "sys": True,
                             })
                             line = prettify_line(time_from, subject, kind, room)
-                            changes += f'❇️ {line}\n'
+                            changes += f'➕ {line}\n'
                             time.sleep(0.5)
 
                     for (subject, kind) in old_slot:
