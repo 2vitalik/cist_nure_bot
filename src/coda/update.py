@@ -1,5 +1,5 @@
-import time
-from datetime import datetime
+from datetime import datetime, timedelta
+from urllib.error import HTTPError
 
 import conf
 from src.cist.parse import load_cist_parsed
@@ -125,13 +125,15 @@ def update_coda():
                                          f' ⏱ {time_from} '
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
-                            line = prettify_line(time_from, subject, kind, room)
-                            changes += f'❌ {line}\n'
-                            time.sleep(0.5)
+                            if day < datetime.now() + timedelta(8):
+                                line = prettify_line(time_from,
+                                                     subject, kind, room)
+                                changes += f'❌ {line}\n'
+                            # time.sleep(0.1)
 
                 if changes:
                     tg_send(channel_id, f'{header}\n{changes}')
-                    slack_status('✔️ _Sent to telegram-channel_')
+                    slack_status('⚠️ _Sent to telegram-channel_')
 
         for group in sorted(new_records):
             # print('=' * 100)
@@ -166,9 +168,11 @@ def update_coda():
                                          f' ⏱ {time_from} '
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
-                            line = prettify_line(time_from, subject, kind, room)
-                            changes += f'❌ {line}\n'
-                            time.sleep(0.5)
+                            if day < datetime.now() + timedelta(8):
+                                line = prettify_line(time_from,
+                                                     subject, kind, room)
+                                changes += f'❌ {line}\n'
+                            # time.sleep(0.1)
 
                     for (subject, kind) in new_slot:
                         if (subject, kind) not in old_slot:
@@ -188,9 +192,11 @@ def update_coda():
                                 "potok_slug": potok_slug,
                                 "sys": True,
                             })
-                            line = prettify_line(time_from, subject, kind, room)
-                            changes += f'➕ {line}\n'
-                            time.sleep(0.5)
+                            if day < datetime.now() + timedelta(8):
+                                line = prettify_line(time_from,
+                                                     subject, kind, room)
+                                changes += f'➕ {line}\n'
+                            # time.sleep(0.1)
 
                     for (subject, kind) in old_slot:
                         if (subject, kind) in new_slot:
@@ -203,12 +209,20 @@ def update_coda():
                                     f' 📆 {date_from}  ⏱ {time_from} '
                                     f' 📝 {subject}, {kind}, '
                                     f' "{old_room}" → "{new_room}"*')
-                                coda_records.update(coda_id, {"Ауд": new_room})
-                                line = prettify_line(time_from, subject, kind,
-                                                     old_room)
-                                changes += f'🌀 {line} → {new_room}\n'
-                                time.sleep(0.5)
+                                try:
+                                    coda_records.update(coda_id,
+                                                        {"Ауд": new_room})
+                                except HTTPError:
+                                    slack_error('`coda`: HTTPError')
+                                    # todo: one more attempt?
+                                    raise
+                                if day < datetime.now() + timedelta(8) \
+                                        and potok_slug == 'pzpi-20':
+                                    line = prettify_line(time_from, subject,
+                                                         kind, old_room)
+                                    changes += f'🌀 {line} → {new_room}\n'
+                                # time.sleep(0.1)
 
                 if changes:
                     tg_send(channel_id, f'{header}\n{changes}')
-                    slack_status('✔️ _Sent to telegram-channel_')
+                    slack_status('⚠️ _Sent to telegram-channel_')
