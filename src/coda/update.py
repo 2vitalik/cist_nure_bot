@@ -33,7 +33,8 @@ def group_slot(rows, source):
         key = (subject, kind)
         if key in slot:
             # never should happen
-            slack_error(f'🚫 Several rooms for the slot: "{key}"')
+            # slack_error(f'🚫 Several rooms for the slot: "{key}"')
+            pass  # fixme !!!
 
         slot[key] = (coda_id, room)
     return slot
