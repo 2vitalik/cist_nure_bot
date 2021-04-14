@@ -10,6 +10,7 @@ def prettify_lesson(subject, kind, room, comment, sep=' → '):
         'зал': '💢',
         'ісп': '💢',
         'екз': '💢',
+        '!!!': '‼️',
     }
     icon = icons.get(kind, '❔')
     room_suffix = f'{sep}{room}' if room else ''
