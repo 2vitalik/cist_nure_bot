@@ -1,3 +1,5 @@
+import traceback
+
 import requests
 from shared_utils.common.dt import dtf
 from shared_utils.io.io import write, write_changed
@@ -8,15 +10,25 @@ from src.utils.slack import slack_status
 
 
 def download_cist(groups, date_from, date_to, potok_slug):
+    path = f'{conf.data_path}/cist'
+
     url = f'https://cist.nure.ua/ias/app/tt/' \
           f'WEB_IAS_TT_GNR_RASP.GEN_GROUP_POTOK_RASP' \
           f'?ATypeDoc=3&Aid_group={groups}' \
           f'&Aid_potok=0&ADateStart={date_from}&ADateEnd={date_to}' \
           f'&AMultiWorkSheet=0'
 
-    content = requests.get(url).content.decode('cp1251').replace('\r', '\n')
+    try:
+        content = \
+            requests.get(url).content.decode('cp1251').replace('\r', '\n')
+    except requests.exceptions.ConnectionError as e:
+        time_slug = dtf('dts')
+        error_filename = f'{path}/errors/{potok_slug}__{time_slug}.csv'
+        write(error_filename, traceback.format_exc().strip())
+        slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
+                     f' `{potok_slug}`: *{type(e).__name__}*: {e}')
+        return
 
-    path = f'{conf.data_path}/cist'
     active_filename, backup_filename = get_filenames(path, potok_slug, 'csv')
 
     error_patterns = [
