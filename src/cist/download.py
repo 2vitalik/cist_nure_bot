@@ -25,8 +25,12 @@ def download_cist(groups, date_from, date_to, potok_slug):
         time_slug = dtf('dts')
         error_filename = f'{path}/errors/{potok_slug}__{time_slug}.csv'
         write(error_filename, traceback.format_exc().strip())
-        slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
-                     f' `{potok_slug}`: *{type(e).__name__}*: {e}')
+        if 'Max retries exceeded' in f'{e}':
+            slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
+                         f' `{potok_slug}`: Max retries exceeded')
+        else:
+            slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
+                         f' `{potok_slug}`: *{type(e).__name__}*: {e}')
         return
 
     active_filename, backup_filename = get_filenames(path, potok_slug, 'csv')
