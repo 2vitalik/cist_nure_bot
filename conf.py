@@ -10,8 +10,8 @@ slack_hooks = {  # should be set in `local_conf.py`
     'callbacks': None,
 }
 
-date_from = '01.02.2021'
-date_to = '30.07.2021'
+date_from = '01.09.2021'
+date_to = '31.12.2021'
 
 groups = {
     'pzpi-21': '9291668_9291670_9291672_9291674_9291676_9291678_9291680_'
