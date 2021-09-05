@@ -55,6 +55,8 @@ def parse_cist_csv(potok_slug):
         rest = rest.replace('*ОSMM (', '*ОSMM(')
         rest = rest.replace('*А (advance)', '*А(advance)')
         rest = rest.replace('*ПМЗ (', '*ПМЗ(')
+        rest = rest.replace('*Soft skills', '*Soft-skills')
+        rest = rest.replace('*П (advance)', '*П(advance)')
 
         values = rest.split(' ')
         if len(values) == 5:
