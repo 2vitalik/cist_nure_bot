@@ -60,6 +60,7 @@ def parse_cist_csv(potok_slug):
         rest = rest.replace('116, ФІЛІЯ_1', '116, ФІЛІЯ_1')
         rest = rest.replace('365, ФІЛІЯ_1', '365, ФІЛІЯ_1')
         rest = rest.replace('116, 287', '116, 287')
+        rest = rest.replace('116, __1', '116, __1')
 
         # print(rest)  # fixme: just for debugging
         values = rest.split(' ')
