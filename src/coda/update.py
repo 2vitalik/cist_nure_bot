@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 from urllib.error import HTTPError
 
@@ -130,7 +131,7 @@ def update_coda():
                                 line = prettify_line(time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
-                            # time.sleep(0.1)
+                            time.sleep(0.5)
 
                 if changes:
                     # tg_send(channel_id, f'{header}\n{changes}')
@@ -173,7 +174,7 @@ def update_coda():
                                 line = prettify_line(time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
-                            # time.sleep(0.1)
+                            time.sleep(0.5)
 
                     for (subject, kind) in new_slot:
                         if (subject, kind) not in old_slot:
@@ -197,7 +198,7 @@ def update_coda():
                                 line = prettify_line(time_from,
                                                      subject, kind, room)
                                 changes += f'➕ {line}\n'
-                            # time.sleep(0.1)
+                            time.sleep(0.5)
 
                     for (subject, kind) in old_slot:
                         if (subject, kind) in new_slot:
@@ -222,7 +223,7 @@ def update_coda():
                                     line = prettify_line(time_from, subject,
                                                          kind, old_room)
                                     changes += f'🌀 {line} → {new_room}\n'
-                                # time.sleep(0.1)
+                                time.sleep(0.5)
 
                 if changes:
                     # tg_send(channel_id, f'{header}\n{changes}')
