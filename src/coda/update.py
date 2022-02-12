@@ -133,7 +133,7 @@ def update_coda():
                             # time.sleep(0.1)
 
                 if changes:
-                    tg_send(channel_id, f'{header}\n{changes}')
+                    # tg_send(channel_id, f'{header}\n{changes}')
                     slack_status('⚠️ _Sent to telegram-channel_')
 
         for group in sorted(new_records):
@@ -225,5 +225,5 @@ def update_coda():
                                 # time.sleep(0.1)
 
                 if changes:
-                    tg_send(channel_id, f'{header}\n{changes}')
+                    # tg_send(channel_id, f'{header}\n{changes}')
                     slack_status('⚠️ _Sent to telegram-channel_')
