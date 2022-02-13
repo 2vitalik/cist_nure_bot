@@ -1,7 +1,7 @@
 import logging
 
 from telegram import Bot
-from telegram.ext import Updater, MessageHandler, Filters
+from telegram.ext import Updater, MessageHandler, Filters, CommandHandler
 from shared_utils.conf import conf as shared_conf
 
 import conf
@@ -22,8 +22,7 @@ def start_bot():
 
     updater = Updater(token=conf.telegram_token)
     dispatcher = updater.dispatcher
-    # dispatcher.add_handler(CommandHandler('buttons', handler.process_buttons,
-    #                                       pass_args=False))
+    dispatcher.add_handler(CommandHandler('send', handler.send_cmd))
     dispatcher.add_handler(MessageHandler(Filters.text, handler.default))
     # dispatcher.add_handler(CallbackQueryHandler(handler.process_callback))
 
