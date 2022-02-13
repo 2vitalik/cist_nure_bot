@@ -29,9 +29,14 @@ class MainHandler:
 
     @basic_handler
     def send_cmd(self):
+        if self.chat_id != conf.telegram_admin:
+            self.msg = self.send('🤷🏻‍♂️ Команда доступна только админу :)')
+            return
+
         text = self.input.replace('/send', '')
         for group, channel_id in conf.channels.items():
             tg_send(channel_id, text)
+        self.send('✔️ Сообщение отправлено')
 
     @basic_handler
     def default(self):
