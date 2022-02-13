@@ -17,8 +17,11 @@ def send_daily():
     def send_weekly():
         if not is_sunday:
             raise Exception('...')
-        n = 18  # fixme
-        message = f'📆 <b>Розклад на тиждень</b>\n\n'  # todo: {n}-й
+        semester_start = datetime.strptime(conf.date_from, '%d.%m.%Y')
+        # nonlocal now
+        # now += timedelta(days=7)  # just for debugging...
+        n = (now - semester_start).days // 7 + 2
+        message = f'📆 <b>Розклад на {n}-й тиждень</b>\n\n'
         for delta in range(1, 7):
             day = now + timedelta(days=delta)
             sub_message, has_items = pretty_day(day, in_week=True)
