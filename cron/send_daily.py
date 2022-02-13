@@ -1,6 +1,5 @@
-import time
-
 import up  # to go to root folder
+import time
 from datetime import datetime, timedelta
 
 from shared_utils.conf import conf as shared_conf
@@ -11,6 +10,25 @@ from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
 from src.utils.slack import slack_status
 from src.utils.tg import tg_send
+
+
+URL = 'https://cist.nure.ua/ias/app/tt/f?p=778:201:1393283551304514:::' \
+      '201:P201_FIRST_DATE,P201_LAST_DATE,P201_GROUP,P201_POTOK:{},{},{},0:'
+
+
+def get_url(group, date_from, days):
+    date_to = date_from + timedelta(days=days - 1)
+
+    group_id = conf.cist_ids[group]
+    str_from = date_from.strftime('%d.%m.%Y')
+    str_to = date_to.strftime('%d.%m.%Y')
+
+    return URL.format(str_from, str_to, group_id)
+
+
+def get_url_semester(group):
+    group_id = conf.cist_ids[group]
+    return URL.format(conf.date_from, conf.date_to, group_id)
 
 
 def send_daily():
@@ -26,7 +44,11 @@ def send_daily():
             day = now + timedelta(days=delta)
             sub_message, has_items = pretty_day(day, in_week=True)
             message += f'{sub_message}\n'
-        message += '#тиждень'
+        url_week = get_url(group, now + timedelta(days=1), 7)
+        url_semester = get_url_semester(group)
+        message += f'🌐 <b>cist</b> — <a href="{url_week}">week</a> & ' \
+                   f'<a href="{url_semester}">semester</a>\n' \
+                   f'#тиждень'
         tg_send(channel_id, '📁')
         tg_send(channel_id, message)
 
@@ -55,12 +77,17 @@ def send_daily():
     for group, channel_id in conf.channels.items():
         if is_sunday:
             send_weekly()
-        # todo: if saturday then send only if there are some lessons...
-        #  (the same for holidays, and perhaps for saturdays for some groups)..
+
         message, has_items = pretty_day(tomorrow)
+        url_day = get_url(group, now + timedelta(days=1), 1)
+        url_semester = get_url_semester(group)
+        message += f'\n🌐 <b>cist</b> — <a href="{url_day}">day</a> & ' \
+                   f'<a href="{url_semester}">semester</a>\n' \
+                   f'#день'
+
         if has_items:
             tg_send(channel_id, '📝')
-            tg_send(channel_id, f'{message}\n#день')
+            tg_send(channel_id, f'{message}')
         else:
             slack_status(f'No items for {group}')  # todo
         time.sleep(1.5)
