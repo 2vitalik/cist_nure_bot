@@ -6,7 +6,8 @@ def get_subjects_from_coda():
     subjects = list()
     entries = coda_subjects.rows_dict()
     for entry in entries.values():
-        subjects.append((entry['Сокращение'], entry['potok_slug']))
+        subjects.append((entry['Сокращение'], entry['potok_slug'],
+                         entry['link']))
     return sorted(subjects)
 
 

@@ -1,5 +1,14 @@
-from src.data.const import times
+import re
 
+from src.data.const import times
+from src.data.load import load_subjects
+
+
+def get_subject_link(subject):
+    subjects = load_subjects()
+    if subject not in subjects:
+        return
+    return subjects[subject][1]
 
 def prettify_lesson(subject, kind, room, comment, sep=' → '):
     icons = {
@@ -13,7 +22,19 @@ def prettify_lesson(subject, kind, room, comment, sep=' → '):
         '!!!': '‼️',
     }
     icon = icons.get(kind, '❔')
-    room_suffix = f'{sep}{room}' if room else ''
+    subject_link = get_subject_link(subject)
+    if subject_link:
+        m = re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)',
+                         subject_link)
+        if m:
+            # course_id = m.group(1)
+            # title = f'dl:{course_id}'
+            title = f'dl.nure'
+        else:
+            title = 'link'
+        room_suffix = f'{sep}<a href="{subject_link}">{title}</a>'
+    else:
+        room_suffix = f'{sep}{room}' if room else ''
     comment_line = f'\n✍️ {comment}' if comment else ''
     return f'{icon} ({kind}) <b>{subject}</b>{room_suffix}{comment_line}'
 
