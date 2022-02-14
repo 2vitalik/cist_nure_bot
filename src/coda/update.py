@@ -60,7 +60,7 @@ def update_coda():
 
     for potok_slug in conf.groups:
         old_subjects = [subject
-                        for subject, old_potok_slug in all_old_subjects
+                        for subject, old_potok_slug, link in all_old_subjects
                         if potok_slug in old_potok_slug]
         old_groups = [group
                       for group, old_potok_slug in all_old_groups
