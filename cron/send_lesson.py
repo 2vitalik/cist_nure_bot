@@ -20,7 +20,7 @@ def send_lesson():
     for group, channel_id in conf.channels.items():
         day_table = data[group][day_key]
         if time_key in day_table:
-            message = prettify_time_slot(day_table, time_key, alarm=True)
+            message = prettify_time_slot(day_table, group, time_key, alarm=True)
             tg_send(channel_id, message)
             time.sleep(1)
 

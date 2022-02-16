@@ -64,13 +64,14 @@ def send_daily():
         day_table = data[group][day_key]
         if day_table:
             for time_from in sorted(day_table):
-                message += prettify_time_slot(day_table, time_from)
+                message += prettify_time_slot(day_table, group, time_from)
             has_items = True
         else:
             message += f'🔆 Схоже, занять немає\n'
         return message, has_items
 
     now = datetime.now()
+    # now = datetime(2022, 2, 13)  # just for debug
     is_sunday = now.weekday() == 6
     tomorrow = now + timedelta(days=1)
     data = load_records()

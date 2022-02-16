@@ -41,9 +41,9 @@ def group_slot(rows, source):
     return slot
 
 
-def prettify_line(time_key, subject, kind, room, comment=''):
+def prettify_line(group, time_key, subject, kind, room, comment=''):
     number = times.get(time_key, '*️⃣')
-    line = prettify_lesson(subject, kind, room, comment, sep='  ')
+    line = prettify_lesson(group, subject, kind, room, comment, sep='  ')
     message = f'{number} <code>{time_key[:5]}</code>: {line}'
     return message
 
@@ -128,7 +128,7 @@ def update_coda():
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
                             if day < datetime.now() + timedelta(8):
-                                line = prettify_line(time_from,
+                                line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
                             time.sleep(0.5)
@@ -171,7 +171,7 @@ def update_coda():
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
                             if day < datetime.now() + timedelta(8):
-                                line = prettify_line(time_from,
+                                line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
                             time.sleep(0.5)
@@ -195,7 +195,7 @@ def update_coda():
                                 "sys": True,
                             })
                             if day < datetime.now() + timedelta(8):
-                                line = prettify_line(time_from,
+                                line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'➕ {line}\n'
                             time.sleep(0.5)
@@ -220,8 +220,9 @@ def update_coda():
                                     raise
                                 if day < datetime.now() + timedelta(8) \
                                         and potok_slug == 'pzpi-20':
-                                    line = prettify_line(time_from, subject,
-                                                         kind, old_room)
+                                    line = prettify_line(group, time_from,
+                                                         subject, kind,
+                                                         old_room)
                                     changes += f'🌀 {line} → {new_room}\n'
                                 time.sleep(0.5)
 
