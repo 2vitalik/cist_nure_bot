@@ -16,12 +16,15 @@ def make_link(link):
     m_dl = re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)',
                         link)
     m_classroom = re.fullmatch(r'https://classroom\.google\.com/.*', link)
+    m_tg = re.fullmatch(r'https://t\.me/.*', link)
     if m_dl:
         # course_id = m.group(1)
         # title = f'dl:{course_id}'
         title = f'dl.nure'
     elif m_classroom:
         title = f'classroom'
+    elif m_tg:
+        title = f'telegram'
     else:
         title = 'link'
     return f'<a href="{link}">{title}</a>'
