@@ -26,6 +26,7 @@ def group_slot(rows, source):
             if new_kind == kind:
                 # never should happen
                 slack_error(f'🚫 Unknown kind: "{kind}"')
+                time.sleep(0.5)
             coda_id = '?'
             kind = new_kind
         elif source == 'coda':
@@ -82,6 +83,7 @@ def update_coda():
         removed_subjects = set(old_subjects) - set(new_subjects)
         for subject in removed_subjects:
             slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
+            time.sleep(0.5)
             # todo: mark as "removed" in coda?
 
         for group in new_groups:
@@ -93,6 +95,7 @@ def update_coda():
         removed_groups = set(old_groups) - set(new_groups)
         for subject in removed_groups:
             slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
+            time.sleep(0.5)
             # todo: mark as "removed" in coda?
 
         for group in sorted(old_records):
