@@ -204,7 +204,7 @@ def update_coda():
                                 line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'➕ {line}\n'
-                            time.sleep(0.5)
+                            time.sleep(1)
 
                     for (subject, kind) in old_slot:
                         if (subject, kind) in new_slot:
