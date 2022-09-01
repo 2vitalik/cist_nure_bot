@@ -14,6 +14,9 @@ semester = '2022-2'
 date_from = '01.09.2022'
 date_to = '01.02.2023'
 
+temporary_disable_tg = False
+temporary_disable_slack_new = False
+
 groups = {
     # 'pzpi-22': '10284307_10284309_10284313_10284311_10284315_10284317_'
     #            '10284319_10284321',
