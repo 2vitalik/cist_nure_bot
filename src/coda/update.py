@@ -14,6 +14,8 @@ from src.utils.date import prettify_date
 from src.utils.slack import slack_status, slack_error
 from src.utils.tg import tg_send
 
+temporary_disable_tg = False
+temporary_disable_slack_new = False
 
 def group_slot(rows, source):
     slot = {}
@@ -133,7 +135,7 @@ def update_coda():
                                 changes += f'❌ {line}\n'
                             time.sleep(0.5)
 
-                if changes:
+                if changes and not temporary_disable_tg:
                     tg_send(channel_id, f'{header}\n{changes}')
                     slack_status('⚠️ _Sent to telegram-channel_')
 
@@ -179,11 +181,12 @@ def update_coda():
                     for (subject, kind) in new_slot:
                         if (subject, kind) not in old_slot:
                             coda_id, room = new_slot[(subject, kind)]
-                            slack_status(f'➕ `{potok_slug}`  new lesson: '
-                                         f'*{group} '
-                                         f' 📆 {date_from} '
-                                         f' ⏱ {time_from} '
-                                         f' 📝 {subject}, {kind}, {room}*')
+                            if not temporary_disable_slack_new:
+                                slack_status(f'➕ `{potok_slug}`  new lesson: '
+                                             f'*{group} '
+                                             f' 📆 {date_from} '
+                                             f' ⏱ {time_from} '
+                                             f' 📝 {subject}, {kind}, {room}*')
                             coda_records.append({
                                 "Группа": group,
                                 "Дата": date_coda,
@@ -226,6 +229,6 @@ def update_coda():
                                     changes += f'🌀 {line} → {new_room}\n'
                                 time.sleep(0.5)
 
-                if changes:
+                if changes and not temporary_disable_tg:
                     tg_send(channel_id, f'{header}\n{changes}')
                     slack_status('⚠️ _Sent to telegram-channel_')
