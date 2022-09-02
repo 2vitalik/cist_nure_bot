@@ -91,7 +91,7 @@ def update_coda():
                                     'potok_slug': potok_slug})
         removed_groups = set(old_groups) - set(new_groups)
         for subject in removed_groups:
-            slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
+            slack_error(f'❌ `{potok_slug}`  removed group: *"{subject}"*')
             time.sleep(0.5)
             # todo: mark as "removed" in coda?
 
