@@ -103,7 +103,7 @@ def update_coda():
             for date_coda in sorted(old_records[group]):
                 # print('-' * 100)
                 # print(date_from)
-                day = datetime.strptime(date_coda, "%Y/%m/%d")
+                day = datetime.strptime(date_coda[:10], "%Y/%m/%d")
                 date_from = day.strftime("%Y-%m-%d")
                 day_prettify = prettify_date(day)
                 header = f'⚠️ Зміна в розкладі\n\n' \
@@ -147,7 +147,7 @@ def update_coda():
             for date_from in sorted(new_records[group]):
                 # print('-' * 100)
                 # print(date_from)
-                day = datetime.strptime(date_from, "%Y-%m-%d")
+                day = datetime.strptime(date_from[:10], "%Y-%m-%d")
                 date_coda = day.strftime("%Y/%m/%d")
                 day_prettify = prettify_date(day)
                 header = f'⚠️ Зміна в розкладі\n\n' \
