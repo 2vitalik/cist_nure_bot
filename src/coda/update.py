@@ -51,7 +51,7 @@ def prettify_line(group, time_key, subject, kind, room, comment=''):
 def update_coda():
     all_old_subjects = get_subjects_from_coda()
     all_old_groups = get_groups_from_coda()
-    all_old_records = get_records_from_coda()
+    all_old_records = get_records_from_coda(cist_comparable=True)
 
     # fixme: this is just for faster debugging...
     # from shared_utils.io.json import json_load

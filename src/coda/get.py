@@ -19,12 +19,16 @@ def get_groups_from_coda():
     return sorted(groups)
 
 
-def get_records_from_coda():
+def get_records_from_coda(cist_comparable=False):
     records = list()
     entries = coda_records.rows_dict()
     for coda_id, entry in entries.items():
-        if entry['removed'] or not entry['visible']:
-            continue
+        if cist_comparable:
+            if entry['removed'] or not entry['sys']:
+                continue
+        else:
+            if entry['removed'] or not entry['visible']:
+                continue
         value = (
             coda_id,
             entry['Группа'], dt_text(entry['Дата']), dt_text(entry['Время']),
