@@ -98,6 +98,12 @@ def update_coda():
         for group in sorted(old_records):
             # print('=' * 100)
             # print(group)
+
+            # fixme: debug only:
+            if group not in conf.channels:
+                print(f'group "{group}" not in `conf.channels`')
+                continue
+
             channel_id = conf.channels[group]
 
             for date_coda in sorted(old_records[group]):
@@ -142,6 +148,12 @@ def update_coda():
         for group in sorted(new_records):
             # print('=' * 100)
             # print(group)
+
+            # fixme: debug only:
+            if group not in conf.channels:
+                print(f'group "{group}" not in `conf.channels`')
+                continue
+
             channel_id = conf.channels[group]
 
             for date_from in sorted(new_records[group]):
