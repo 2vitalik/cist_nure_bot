@@ -38,7 +38,7 @@ def send_daily():
         semester_start = datetime.strptime(conf.date_from, '%d.%m.%Y')
         # nonlocal now
         # now += timedelta(days=7)  # just for debugging...
-        n = (now - semester_start).days // 7 + 2
+        # n = (now - semester_start).days // 7 + 2
         # message = f'📆 <b>Розклад на {n}-й тиждень</b>\n\n'
         message = f'📆 <b>Розклад на тиждень</b>\n\n'
         for delta in range(1, 7):
