@@ -73,6 +73,8 @@ def send_daily():
 
     now = datetime.now()
     # now = datetime(2022, 2, 13)  # just for debug
+    # now = datetime(2022, 8, 28)  # just for debug
+    # now = datetime(2023, 2, 12)  # to emulate Sunday initial start
     is_sunday = now.weekday() == 6
     tomorrow = now + timedelta(days=1)
     data = load_records()
