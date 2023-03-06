@@ -13,7 +13,7 @@ def get_subject_links(subject):
 
 
 def make_link(link):
-    if not link:
+    if not link or link == '?':
         return ''
 
     m_dl = re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)',
