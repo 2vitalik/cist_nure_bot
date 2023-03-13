@@ -25,11 +25,11 @@ def load_subjects():
     subjects_entries = \
         json_load(f'{conf.data_path}/coda/json/all_subjects.json')
     subjects = {}
-    for key, potok_slug, link in subjects_entries:
+    for key, potok_slug, link, meet in subjects_entries:
         if key in subjects:
-            (old_potok_slug, old_link) = subjects[key]
+            (old_potok_slug, old_link, old_meet) = subjects[key]
             potok_slug += f', {old_potok_slug}'
-        subjects[key] = (potok_slug, link)
+        subjects[key] = (potok_slug, link, meet)
     return subjects
 
 

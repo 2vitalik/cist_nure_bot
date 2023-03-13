@@ -9,7 +9,7 @@ def get_subject_links(subject):
     subjects = load_subjects()
     if subject not in subjects:
         return
-    return subjects[subject][1]
+    return subjects[subject][1], subjects[subject][2]
 
 
 def make_link(link):
@@ -46,16 +46,16 @@ def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     }
     icon = icons.get(kind, '❔')
 
-    subject_links = get_subject_links(subject)
-    if subject_links:
-        if '\n' in subject_links:
-            two_links = subject_links.split('\n')
+    dl_links, meet_links = get_subject_links(subject)
+    if dl_links:
+        if '\n' in dl_links:
+            two_links = dl_links.split('\n')
             if conf.group_eng[group]:
                 subject_link = two_links[0]
             else:
                 subject_link = two_links[1]
         else:
-            subject_link = subject_links
+            subject_link = dl_links
         prettify_link = make_link(subject_link)
         room_suffix = f'{sep}{prettify_link}'
     else:

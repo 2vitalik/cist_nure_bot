@@ -11,5 +11,13 @@ def dump_coda():
 
     path = f'{conf.data_path}/coda'
     dump_json_data(path, 'all', kind='coda',
-                   names=['records', 'groups', 'subjects'],
-                   values=[records, groups, subjects])
+                   names=[
+                       'subjects',
+                       'groups',
+                       'records',
+                   ],
+                   values=[
+                       subjects,
+                       groups,
+                       records,
+                   ])
