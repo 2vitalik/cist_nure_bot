@@ -59,7 +59,11 @@ def send_daily():
         if in_week:
             message = f'▪️ {day_prettify}\n'
         else:
-            message = f'📆 Розклад на завтра\n\n' \
+            title = 'завтра'
+            real_now = datetime.now()
+            if now.month == real_now.month and now.day + 1 == real_now.day:
+                title = 'сьогодні'
+            message = f'📆 Розклад на {title}\n\n' \
                       f'▪️ {day_prettify}\n'
         has_items = False
         day_table = data[group][day_key]
