@@ -21,7 +21,7 @@ def make_link(link):
     m_classroom = re.fullmatch(r'https://classroom\.google\.com/.*', link)
     m_tg = re.fullmatch(r'https://t\.me/.*', link)
     if m_dl:
-        title = f'dl.nure'
+        title = f'DL'
     elif m_classroom:
         title = f'classroom'
     elif m_tg:
@@ -68,7 +68,8 @@ def get_links(group, subject, room, sep):
         links_text = ", ".join(links)
         return f'{sep}{links_text}'
     else:
-        return f'{sep}{room}' if room else ''
+        # return f'{sep}{room}' if room else ''
+        return ''
 
 
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
