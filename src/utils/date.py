@@ -37,4 +37,4 @@ def prettify_date(date):
         'неділя',
     ]
     weekday = weekdays[date.weekday()]
-    return f'<b>{date.day} {month}</b> <i>({weekday})</i>'
+    return f'<b>{date.day} {month}</b> ({weekday})'

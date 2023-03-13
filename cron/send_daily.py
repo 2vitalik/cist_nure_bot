@@ -40,7 +40,7 @@ def send_daily():
         # now += timedelta(days=7)  # just for debugging...
         # n = (now - semester_start).days // 7 + 2
         # message = f'📆 <b>Розклад на {n}-й тиждень</b>\n\n'
-        message = f'📆 <b>Розклад на тиждень</b>\n\n'
+        message = f'📆 Розклад на тиждень\n\n'
         for delta in range(1, 7):
             day = now + timedelta(days=delta)
             sub_message, has_items = pretty_day(day, in_week=True)
