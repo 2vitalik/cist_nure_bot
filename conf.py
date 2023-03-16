@@ -175,6 +175,10 @@ cist_ids = {
     # 'ПЗПІи-18-1': '7240401',
 }
 
+icons = {  # should be set in `local_conf.py`
+    'ПЗПІ-20-4': None,
+}
+
 channels = {  # should be set in `local_conf.py`
     'ПЗПІ-19-3': None,
 }

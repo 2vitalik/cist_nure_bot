@@ -32,10 +32,9 @@ def make_link(link):
 
 
 def get_icon(group, kind):
-    # todo: get related icon for student group...
     icons = {
-        'лк': '📖',
-        'пз': '💬',
+        'лк': '💬',
+        'пз': '📖',
         'лб': '⚙️',
         'ку': '🔗',
         'кс': '❓',
@@ -45,6 +44,10 @@ def get_icon(group, kind):
         '!!!': '‼️',
         # todo: other types...
     }
+
+    custom_icons = conf.icons.get(group, {})
+    icons.update(custom_icons)
+
     return icons.get(kind, '❔')
 
 
@@ -88,5 +91,5 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
     message = f'{alarm_icon}{number} <code>{time_key[:5]}</code>: {line}\n'
     for lesson in lessons[1:]:
         line = prettify_lesson(group, *lesson[1:])
-        message += f'{alarm_icon}▫️<code>     </code>   {line}\n'
+        message += f'{alarm_icon}▫️ <code>     </code>: {line}\n'
     return message
