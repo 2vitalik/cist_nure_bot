@@ -12,23 +12,25 @@ def get_subject_links(subject):
     return subjects[subject][1], subjects[subject][2]
 
 
-def make_link(link):
-    if not link or link == '?':
+def make_link(href):
+    if not href or href == '?':
         return ''
 
-    m_dl = re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)',
-                        link)
-    m_classroom = re.fullmatch(r'https://classroom\.google\.com/.*', link)
-    m_tg = re.fullmatch(r'https://t\.me/.*', link)
-    if m_dl:
+    if re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)', href):
         title = f'DL'
-    elif m_classroom:
+    elif re.fullmatch(r'https://classroom\.google\.com/.*', href):
         title = f'classroom'
-    elif m_tg:
+    elif re.fullmatch(r'https://t\.me/.*', href):
         title = f'telegram'
+    elif re.fullmatch(r'https://meet\.google\.com/.*', href):
+        title = f'meet'
     else:
         title = 'link'
-    return f'<a href="{link}">{title}</a>'
+
+    link = f'<a href="{href}">{title}</a>'
+    # if title == 'meet':
+    #     link = f'<b>{link}</b>'
+    return link
 
 
 def get_icon(group, kind):
@@ -51,7 +53,7 @@ def get_icon(group, kind):
     return icons.get(kind, '❔')
 
 
-def get_links(group, subject, room, sep):
+def get_links(group, subject, kind, room, sep):
     dl_links, meet_links = get_subject_links(subject)
 
     links = []
@@ -67,6 +69,65 @@ def get_links(group, subject, room, sep):
         link = make_link(href)
         links.append(link)
 
+    if meet_links:
+        print()
+        print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
+
+        for line in meet_links.split('\n'):
+            m = re.fullmatch(r'\[(.*)]: (https://meet.google.com/\w{3}-\w{4}-\w{3})', line)
+            if not m:
+                raise RuntimeError(f'Never should happen: {line}')
+
+            def check_pz_lb(kind):
+                raw_nums = cfg.split(',')
+                nums = []
+                for num in raw_nums:
+                    if num == kind:
+                        continue
+                    elif re.fullmatch(r'\d+', num):
+                        nums.append(num)
+                    elif m := re.fullmatch(r'(\d+)-(\d+)', num):
+                        a, b = m.groups()
+                        nums.extend(map(str, range(int(a), int(b) + 1)))
+                    else:
+                        raise RuntimeError(f'Wrong value: {cfg}')
+                curr_num = group[len('ПЗПІ-XX-'):]
+                return curr_num in nums
+
+            cfg, href = m.groups()
+            eng = conf.group_eng[group]
+
+            if '?' in cfg:
+                ok = False
+            elif kind == 'лк':
+                if cfg in ['*', 'лк']:
+                    ok = True
+                elif cfg == 'лк-А':
+                    ok = eng
+                elif cfg == 'лк-У':
+                    ok = not eng
+                else:
+                    ok = False
+            elif kind in ['пз', 'лб']:
+                other_kind = {'пз': 'лб', 'лб': 'пз'}[kind]
+                if cfg in ['*', kind, 'пз,лб', 'лб,пз']:
+                    ok = True
+                elif cfg in ['лк', 'лк-А', 'лк-У']:
+                    ok = False
+                elif kind not in cfg and other_kind in cfg:
+                    ok = False
+                else:
+                    ok = check_pz_lb(kind)
+            else:
+                ok = False
+
+            if ok:
+                # print(f'{cfg} -> {meet_link}')  # fixme: debug
+                link = make_link(href)
+                links.append(link)
+            # else:
+            #     print(f'{cfg} -> -')
+
     if links:
         links_text = ", ".join(links)
         return f'{sep}{links_text}'
@@ -77,7 +138,7 @@ def get_links(group, subject, room, sep):
 
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     icon = get_icon(group, kind)
-    links = get_links(group, subject, room, sep)
+    links = get_links(group, subject, kind, room, sep)
     comment_line = f'\n✍️ {comment}' if comment else ''
 
     return f'{icon} ({kind}) <b>{subject}</b>{links}{comment_line}'
@@ -93,3 +154,16 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
         line = prettify_lesson(group, *lesson[1:])
         message += f'{alarm_icon}▫️ <code>     </code>: {line}\n'
     return message
+
+
+if __name__ == '__main__':  # just for test...
+    subjects = load_subjects()
+    for subject, data in subjects.items():
+        if data[2]:
+            print(subject)
+            print(data[2])
+
+    for subject in subjects:
+        for kind in ['лк', 'пз', 'лб']:
+            for group in ['ПЗПІ-22-1', 'ПЗПІ-22-6']:
+                get_links(group, subject, kind, '', '')
