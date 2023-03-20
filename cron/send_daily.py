@@ -51,7 +51,7 @@ def send_daily():
                    f'<a href="{url_semester}">semester</a>\n' \
                    f'#тиждень'
         tg_send(channel_id, '📁')
-        tg_send(channel_id, message)
+        tg_send(channel_id, message, pin=True)
 
     def pretty_day(day, in_week=False):
         day_key = day.strftime('%Y/%m/%d')
