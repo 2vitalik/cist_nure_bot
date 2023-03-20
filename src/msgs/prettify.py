@@ -86,11 +86,13 @@ def get_links(group, subject, kind, room, sep):
                         continue
                     elif re.fullmatch(r'\d+', num):
                         nums.append(num)
-                    elif m := re.fullmatch(r'(\d+)-(\d+)', num):
-                        a, b = m.groups()
-                        nums.extend(map(str, range(int(a), int(b) + 1)))
                     else:
-                        raise RuntimeError(f'Wrong value: {cfg}')
+                        m = re.fullmatch(r'(\d+)-(\d+)', num)
+                        if m:
+                            a, b = m.groups()
+                            nums.extend(map(str, range(int(a), int(b) + 1)))
+                        else:
+                            raise RuntimeError(f'Wrong value: {cfg}')
                 curr_num = group[len('ПЗПІ-XX-'):]
                 return curr_num in nums
 
