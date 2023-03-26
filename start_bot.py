@@ -6,6 +6,7 @@ from shared_utils.conf import conf as shared_conf
 
 import conf
 from bot.main import MainHandler
+from bot.text import TextHandler
 
 
 def start_bot():
@@ -19,10 +20,13 @@ def start_bot():
     bot.send_message(chat_id=conf.telegram_admin, text='💬 Starting the bot...')
 
     handler = MainHandler()
+    text_handler = TextHandler()
 
     updater = Updater(token=conf.telegram_token)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('send', handler.send_cmd))
+    dispatcher.add_handler(CommandHandler('text', text_handler.text))
+    dispatcher.add_handler(CommandHandler('vote', text_handler.vote))
     dispatcher.add_handler(MessageHandler(Filters.text, handler.default))
     # dispatcher.add_handler(CallbackQueryHandler(handler.process_callback))
 
