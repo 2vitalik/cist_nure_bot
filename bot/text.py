@@ -34,6 +34,7 @@ class TextHandler:
                 '20': 10,
                 '21': 11,
                 '22': 10,
+                '23': 10,
             }
             if slug in groups_count:
                 chats.extend([
