@@ -105,9 +105,11 @@ def update_coda():
             # print('=' * 100)
             # print(group)
 
-            # fixme: debug only:
+            # fixme: comment this is for debug only mode:
             if group not in conf.channels:
-                print(f'group "{group}" not in `conf.channels`')
+                msg = f'group "{group}" not in `conf.channels`'
+                print(msg)
+                slack_error(msg)
                 continue
 
             channel_id = conf.channels[group]
@@ -155,9 +157,11 @@ def update_coda():
             # print('=' * 100)
             # print(group)
 
-            # fixme: debug only:
+            # fixme: comment this is for debug only mode:
             if group not in conf.channels:
-                print(f'group "{group}" not in `conf.channels`')
+                msg = f'group "{group}" not in `conf.channels`'
+                print(msg)
+                slack_error(msg)
                 continue
 
             channel_id = conf.channels[group]
