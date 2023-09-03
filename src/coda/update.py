@@ -98,6 +98,9 @@ def update_coda():
             time.sleep(0.5)
             # todo: mark as "removed" in coda?
 
+        max_changes_date = datetime.now() + timedelta(10)
+        min_changes_date = datetime.now() - timedelta(1)
+
         for group in sorted(old_records):
             # print('=' * 100)
             # print(group)
@@ -138,7 +141,7 @@ def update_coda():
                                          f' ⏱ {time_from} '
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
-                            if day < datetime.now() + timedelta(8):
+                            if min_changes_date <= day <= max_changes_date:
                                 line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
@@ -187,7 +190,7 @@ def update_coda():
                                          f' ⏱ {time_from} '
                                          f' 📝 {subject}, {kind}, {room}*')
                             coda_records.update(coda_id, {"removed": True})
-                            if day < datetime.now() + timedelta(8):
+                            if min_changes_date <= day <= max_changes_date:
                                 line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
@@ -236,8 +239,8 @@ def update_coda():
                                     slack_error('`coda`: HTTPError')
                                     # todo: one more attempt?
                                     raise
-                                if day < datetime.now() + timedelta(8) \
-                                        and potok_slug == 'pzpi-20':
+                                if min_changes_date <= day <= max_changes_date \
+                                        and False:  # make sense only "offline"
                                     line = prettify_line(group, time_from,
                                                          subject, kind,
                                                          old_room)
