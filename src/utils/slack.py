@@ -34,28 +34,19 @@ def slack_exception(slug, exc, message_suffix='', send_traceback=True):
     slack_error(content if send_traceback else message)
 
 
-class SilentError(Exception):
-    pass
-
-
 def slack(name, *, raise_error=True):
     def decorator(func):
 
         def wrapped(*args, **kwargs):
             result = None
-            exception = None
             try:
                 result = func(*args, **kwargs)
-            except SilentError as e:
-                exception = e
             except Exception as e:
-                exception = SilentError(e)
                 slack_exception(name, e)
 
-            if exception:
                 slack_error(f":no_entry: `{name}`  Failed")
                 if raise_error:
-                    raise exception
+                    raise
             return result
 
         return wrapped
