@@ -30,6 +30,6 @@ class MainHandler:
 
     @basic_handler
     def default(self):
-        if self.chat_id != self.update.message.from_user.id:
+        if self.chat_id == self.update.message.from_user.id:
             self.msg = self.send('🤷🏻‍♂️ Интерфейс индивидуального взаимодействия'
                                  ' пока не доступен')
