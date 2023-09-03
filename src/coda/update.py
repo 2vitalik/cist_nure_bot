@@ -14,6 +14,7 @@ from src.utils.date import prettify_date
 from src.utils.slack import slack_status, slack_error
 from src.utils.tg import tg_send
 
+
 def group_slot(rows, source):
     slot = {}
     for row in rows:
@@ -77,6 +78,7 @@ def update_coda():
                 slack_status(f'➕ `{potok_slug}`  new subject: *"{subject}"*')
                 coda_subjects.append({'Сокращение': subject,
                                       'potok_slug': potok_slug})
+                time.sleep(0.5)
         removed_subjects = set(old_subjects) - set(new_subjects)
         for subject in removed_subjects:
             slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
@@ -89,6 +91,7 @@ def update_coda():
                 spec, year, num = group.split('-')
                 coda_groups.append({'Спец': spec, "Год": year, "Номер": num,
                                     'potok_slug': potok_slug})
+                time.sleep(0.5)
         removed_groups = set(old_groups) - set(new_groups)
         for subject in removed_groups:
             slack_error(f'❌ `{potok_slug}`  removed group: *"{subject}"*')
