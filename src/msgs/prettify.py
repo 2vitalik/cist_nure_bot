@@ -8,7 +8,7 @@ from src.data.load import load_subjects
 def get_subject_links(subject):
     subjects = load_subjects()
     if subject not in subjects:
-        return
+        return None, None
     return subjects[subject][1], subjects[subject][2]
 
 

@@ -15,7 +15,7 @@ def get_groups_from_coda():
     groups = list()
     entries = coda_groups.rows_dict()
     for entry in entries.values():
-        groups.append((entry['Название'], entry['potok_slug']))
+        groups.append((entry['Группа'], entry['potok_slug']))
     return sorted(groups)
 
 
