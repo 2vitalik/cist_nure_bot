@@ -167,13 +167,16 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
 
 
 if __name__ == '__main__':  # just for test...
+    groups = load_groups()
     subjects = load_subjects()
+
     for subject, data in subjects.items():
         if data[2]:
-            print(subject)
+            print(subject, '-' * 40)
             print(data[2])
+    print('=' * 60)
 
     for subject in subjects:
         for kind in ['лк', 'пз', 'лб']:
-            for group in ['ПЗПІ-22-1', 'ПЗПІ-22-6']:
+            for group in groups:
                 get_links(group, subject, kind, '', '')
