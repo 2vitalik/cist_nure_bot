@@ -33,5 +33,15 @@ def load_subjects():
     return subjects
 
 
+def load_groups():
+    groups_entries = \
+        json_load(f'{conf.data_path}/coda/json/all_groups.json')
+    groups = []
+    for group, potok_slug in groups_entries:
+        groups.append(group)
+    return groups
+
+
 if __name__ == '__main__':
     pprint(load_subjects())
+    pprint(load_groups())
