@@ -2,7 +2,8 @@ import re
 
 import conf
 from src.data.const import times
-from src.data.load import load_subjects
+from src.data.load import load_subjects, load_groups
+from src.utils.tg import tg_send
 
 
 def get_subject_links(subject):
@@ -70,13 +71,16 @@ def get_links(group, subject, kind, room, sep):
         links.append(link)
 
     if meet_links:
-        print()
-        print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
+        # print()
+        # print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
 
         for line in meet_links.split('\n'):
             m = re.fullmatch(r'\[(.*)]: (https://meet.google.com/\w{3}-\w{4}-\w{3})', line)
             if not m:
-                raise RuntimeError(f'Never should happen: {line}')
+                msg = f'Never should happen: {line}\n ' \
+                      f'[{subject}] ({kind}) - {group}'
+                tg_send(conf.telegram_admin, msg)
+                continue
 
             def check_pz_lb(kind):
                 raw_nums = cfg.split(',')
@@ -92,7 +96,11 @@ def get_links(group, subject, kind, room, sep):
                             a, b = m.groups()
                             nums.extend(map(str, range(int(a), int(b) + 1)))
                         else:
-                            raise RuntimeError(f'Wrong value: {cfg}')
+                            msg = f'Wrong value in cfg ("{cfg}"): {line}\n ' \
+                                  f'[{subject}] ({kind}) - {group}'
+                            tg_send(conf.telegram_admin, msg)
+                            continue
+
                 curr_num = group[len('ПЗПІ-XX-'):]
                 return curr_num in nums
 
