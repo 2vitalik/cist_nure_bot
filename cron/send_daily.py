@@ -8,6 +8,7 @@ import conf
 from src.data.load import load_records
 from src.msgs.prettify import prettify_time_slot
 from src.utils.date import prettify_date
+from src.utils.errors import errors
 from src.utils.slack import slack_status
 from src.utils.tg import tg_send
 
@@ -31,6 +32,7 @@ def get_url_semester(group):
     return URL.format(conf.date_from, conf.date_to, group_id)
 
 
+@errors('send_daily')
 def send_daily():
     def send_weekly():
         if not is_sunday:
