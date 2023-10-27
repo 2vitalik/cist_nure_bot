@@ -124,6 +124,9 @@ def update_coda():
                          f'▪️ {day_prettify}'
                 changes = ''
 
+                if day < datetime(2023, 10, 27):
+                    continue
+
                 for time_from in sorted(old_records[group][date_coda]):
                     # print('-', time_from)
 
@@ -175,6 +178,9 @@ def update_coda():
                 header = f'⚠️ Зміна в розкладі\n\n' \
                          f'▪️ {day_prettify}'
                 changes = ''
+
+                if day < datetime(2023, 10, 27):
+                    continue
 
                 for time_from in sorted(new_records[group][date_from]):
                     # print('-', time_from)
