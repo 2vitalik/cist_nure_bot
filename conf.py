@@ -10,9 +10,9 @@ slack_hooks = {  # should be set in `local_conf.py`
     'callbacks': None,
 }
 
-semester = '2023-2'
-date_from = '01.09.2023'
-date_to = '31.01.2024'
+semester = '2024-1'
+date_from = '01.02.2024'
+date_to = '01.07.2024'
 
 temporary_disable_tg = False
 temporary_disable_slack_new = False
