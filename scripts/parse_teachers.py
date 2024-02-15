@@ -32,7 +32,7 @@ def parse(input_data, max_eng, max_ukr=None):
             item = item.strip()
             if not item:
                 continue
-            m = re.fullmatch(r'(Лк|Пз|Лб) \(\d+\) - (.+?), (.*)', item)
+            m = re.fullmatch(r'(Лк|Пз|Лб|Конс|Екз|Зал) \(\d+\) - (.+?), (.*)', item)
             if not m:
                 print(line)
                 print(item)
