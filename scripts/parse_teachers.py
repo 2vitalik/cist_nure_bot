@@ -36,9 +36,9 @@ def parse(input_data, max_eng, max_ukr=None):
             if not m:
                 print(line)
                 print(item)
-                raise Exception()
+                raise Exception('Failed `fullmatch`')
             kind, groups, teachers = m.groups()
-            # print(groups)
+            print(groups)
             # if not short.startswith('*'):
             #     continue
             if short.startswith('*') and '*' in groups and '(' in groups:
@@ -63,7 +63,13 @@ def parse(input_data, max_eng, max_ukr=None):
         teachers_data = defaultdict(dict)
         for teacher, data in grouped_teachers.items():
             for kind, groups in data.items():
-                groups = ','.join(map(str, sorted(map(int, set(groups)))))
+                try:
+                    print(groups)
+                    groups = ','.join(map(str, sorted(map(int, set(groups)))))
+                except ValueError as e:
+                    print(e)
+                    print(groups)
+                    raise e
                 if groups == all_ukr:
                     groups = 'ukr'
                 else:
