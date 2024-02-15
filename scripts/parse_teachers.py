@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 
-from scripts.data.pi_2023_s2 import pi23, pi22, pi21, pi20, pim22
+from scripts.data.pi_2024_s1 import pi23, pi22, pi21, pi20
 
 
 def parse(input_data, max_eng, max_ukr=None):
@@ -101,4 +101,4 @@ if __name__ == '__main__':
     parse(pi22, 5, 10)
     parse(pi21, 5, 11)
     parse(pi20, 5, 10)
-    parse(pim22, 6)
+    # parse(pim22, 6)
