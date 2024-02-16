@@ -88,10 +88,15 @@ class Parser:
             item = item.strip()
             if not item:
                 continue
-            m = re.fullmatch(r'(Лк|Пз|Лб|Конс|Екз|Зал) \(\d+\) - (.+?), (.*)', item)
+
+            m = re.fullmatch(r'(?P<kind>Лк|Пз|Лб|Конс|Екз|Зал) '
+                             r'\(\d+\) - '
+                             r'(?P<groups>.+?), '
+                             r'(?P<teachers>.*)',
+                             item)
             if not m:
-                print(item)
-                raise Exception('Failed `fullmatch`')
+                raise Exception(f'Wrong item format: "{item}"')
+
             kind, groups, teachers = m.groups()
 
             alternative = (
@@ -101,6 +106,7 @@ class Parser:
             )
             if alternative:
                 groups = ['0']
+
             else:
                 groups = re.sub('ПЗПІ-2\d-', '', groups)
                 groups = re.sub('ІПЗм-2\d-', '', groups)
@@ -108,6 +114,7 @@ class Parser:
                 # m = re.fullmatch(r'[\d,;]+', groups)
                 # if not m:
                 #     print(item)
+
             teachers = re.sub(' [А-ЯІЄ0]\. [А-ЯІЄ0]\.', '', teachers)
             teachers = ', '.join(set(teachers.split(', ')))
             # if len(teachers) > 1:
