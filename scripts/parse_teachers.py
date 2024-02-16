@@ -129,13 +129,7 @@ class Parser:
         teachers_data = defaultdict(dict)
         for teacher, data in grouped_teachers.items():
             for kind, groups in data.items():
-                try:
-                    print(groups)
-                    groups = ','.join(map(str, sorted(map(int, set(groups)))))
-                except ValueError as e:
-                    print(e)
-                    print(groups)
-                    raise e
+                groups = ','.join(map(str, sorted(map(int, set(groups)))))
                 if groups == self.ukr_groups_text:
                     groups = 'ukr'
                 else:
