@@ -47,7 +47,7 @@ def get_groups_numbers_texts(max_eng_group, max_ukr_group):
     return eng_groups_text, ukr_groups_text, all_groups_text
 
 
-class Parser:
+class PotokParser:
     def __init__(self, potok, input_data, max_eng_group, max_ukr_group):
         self.potok = potok
         self.input_data = input_data
@@ -169,4 +169,4 @@ class Parser:
 
 if __name__ == '__main__':
     for potok, data in potoks.items():
-        Parser(potok, **data).parse()
+        PotokParser(potok, **data).parse()
