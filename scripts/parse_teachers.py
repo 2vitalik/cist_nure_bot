@@ -33,26 +33,24 @@ potoks = {
 }
 
 
-def get_groups_numbers_texts(max_eng_group, max_ukr_group):
-    eng_groups_text = ','.join(map(str, range(1, max_eng_group + 1)))
+class GroupNumbers:
+    def __init__(self, max_eng_group, max_ukr_group):
+        self.eng = ','.join(map(str, range(1, max_eng_group + 1)))
 
-    if max_ukr_group:
-        ukr_groups_text = ','.join(map(str, range(max_eng_group + 1,
-                                                  max_ukr_group + 1)))
-        all_groups_text = f'{eng_groups_text},{ukr_groups_text}'
-    else:
-        ukr_groups_text = None
-        all_groups_text = eng_groups_text
-
-    return eng_groups_text, ukr_groups_text, all_groups_text
+        if max_ukr_group:
+            self.ukr = ','.join(map(str, range(max_eng_group + 1,
+                                                      max_ukr_group + 1)))
+            self.all = f'{self.eng},{self.ukr}'
+        else:
+            self.ukr = None
+            self.all = self.eng
 
 
 class PotokParser:
     def __init__(self, potok, input_data, max_eng_group, max_ukr_group):
         self.potok = potok
         self.input_data = input_data
-        self.eng_groups_text, self.ukr_groups_text, self.all_groups_text = \
-            get_groups_numbers_texts(max_eng_group, max_ukr_group)
+        self.numbers = GroupNumbers(max_eng_group, max_ukr_group)
         self.parse()
 
     def parse(self):
@@ -130,16 +128,16 @@ class PotokParser:
         for teacher, data in grouped_teachers.items():
             for kind, groups in data.items():
                 groups = ','.join(map(str, sorted(map(int, set(groups)))))
-                if groups == self.ukr_groups_text:
+                if groups == self.numbers.ukr:
                     groups = 'ukr'
                 else:
-                    if self.ukr_groups_text:
-                        if groups == self.eng_groups_text:
+                    if self.numbers.ukr:
+                        if groups == self.numbers.eng:
                             groups = 'eng'
-                        elif groups == self.all_groups_text:
+                        elif groups == self.numbers.all:
                             groups = 'all'
                     else:
-                        if groups == self.eng_groups_text:
+                        if groups == self.numbers.eng:
                             groups = 'all'
                 teachers_data[teacher][kind] = groups
 
