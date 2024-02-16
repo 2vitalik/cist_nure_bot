@@ -49,14 +49,19 @@ class GroupNumbers:
 class PotokParser:
     def __init__(self, potok, input_data, max_eng_group, max_ukr_group):
         self.potok = potok
-        self.input_data = input_data
         self.numbers = GroupNumbers(max_eng_group, max_ukr_group)
-        self.parse()
+        self.parse(input_data)
 
-    def parse(self):
+    def parse(self, input_data):
         print('=' * 110, self.potok)
-        for line in self.input_data.strip().split('\n'):
-            self.parse_line(line)
+        for line in input_data.strip().split('\n'):
+            SubjectParser(line, self.numbers)
+
+
+class SubjectParser:
+    def __init__(self, line, numbers):
+        self.numbers = numbers
+        self.parse_line(line)
 
     def parse_line(self, line):
         m = re.fullmatch(r'(?P<short>[^\t]+)\t'
