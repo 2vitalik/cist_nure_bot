@@ -82,7 +82,8 @@ class SubjectParser:
         grouped_teachers = self.group_teachers(short, long, other)
         teachers_data = self.get_teachers_data(grouped_teachers)
         teachers_data = self.join_pz_and_lb(teachers_data)
-        self.print_data(teachers_data)
+        out_data = self.get_out_data(teachers_data)
+        print(out_data)
 
     def group_teachers(self, short, long, other):
         grouped_teachers = defaultdict(lambda: defaultdict(list))
@@ -161,15 +162,18 @@ class SubjectParser:
         # pprint(teachers_data)
         return teachers_data
 
-    def print_data(self, teachers_data):
+    def get_out_data(self, teachers_data):
+        result = ''
         for teacher, data in teachers_data.items():
             values = ', '.join([
                 f"{kind}-{groups}".lower()
                 for kind, groups in data.items()
             ])
-            print(f'{teacher}: {values}')
+            result += f'{teacher}: {values}\n'
+
+        return result
 
 
 if __name__ == '__main__':
     for potok, data in potoks.items():
-        PotokParser(potok, **data).parse()
+        PotokParser(potok, **data)
