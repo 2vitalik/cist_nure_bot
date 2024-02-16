@@ -76,12 +76,12 @@ class Parser:
         print(short, '-', long)
         print('-' * 100)
 
-        grouped_teachers = self.group_teachers(short, other)
+        grouped_teachers = self.group_teachers(short, long, other)
         teachers_data = self.get_teachers_data(grouped_teachers)
         teachers_data = self.join_pz_and_lb(teachers_data)
         self.print_data(teachers_data)
 
-    def group_teachers(self, short, other):
+    def group_teachers(self, short, long, other):
         grouped_teachers = defaultdict(lambda: defaultdict(list))
 
         for item in other.split(':'):
@@ -93,12 +93,14 @@ class Parser:
                 print(item)
                 raise Exception('Failed `fullmatch`')
             kind, groups, teachers = m.groups()
-            print(groups)
-            # if not short.startswith('*'):
-            #     continue
-            if short.startswith('*') and '*' in groups and '(' in groups:
+
+            alternative = (
+                short.startswith('*') and '*' in groups and '(' in groups
+                or
+                long.startswith('*') and '(' in groups
+            )
+            if alternative:
                 groups = ['0']
-                # continue  # temp
             else:
                 groups = re.sub('ПЗПІ-2\d-', '', groups)
                 groups = re.sub('ІПЗм-2\d-', '', groups)
