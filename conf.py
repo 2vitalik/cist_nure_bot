@@ -1,3 +1,4 @@
+from pathlib import Path
 
 coda_token = None  # should be set in `local_conf.py`
 coda_doc = None  # should be set in `local_conf.py`
@@ -209,7 +210,9 @@ channels = {  # should be set in `local_conf.py`
     'ПЗПІ-19-3': None,
 }
 
-data_path = 'data'
+# Paths:
+root_path = Path(__file__).resolve().parent
+data_path = root_path / 'data'
 
 try:
     from local_conf import *
