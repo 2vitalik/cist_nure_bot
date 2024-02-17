@@ -102,6 +102,8 @@ class SubjectParser:
                 raise Exception(f'Wrong item format: "{item}"')
 
             kind, groups, teachers = m.groups()
+            if kind in ['Конс', 'Екз', 'Зал']:
+                continue
 
             alternative = (
                 short.startswith('*') and '*' in groups and '(' in groups
