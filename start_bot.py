@@ -1,6 +1,5 @@
 import logging
 
-from telegram import Bot
 from telegram.ext import Updater, MessageHandler, Filters, CommandHandler, \
     Dispatcher
 from shared_utils.conf import conf as shared_conf
@@ -8,6 +7,7 @@ from shared_utils.conf import conf as shared_conf
 import conf
 from bot.main import MainHandler
 from bot.text import TextHandler
+from src.utils.tg import tg_send
 
 
 def enable_logging():
@@ -32,8 +32,7 @@ def start_bot():
     shared_conf.slack_hooks = conf.slack_hooks
 
     enable_logging()
-    bot = Bot(conf.telegram_token)
-    bot.send_message(chat_id=conf.telegram_admin, text='💬 Starting the bot...')
+    tg_send(conf.telegram_admin, '💬 Starting the bot...')
 
     updater = Updater(token=conf.telegram_token)
     add_handles(updater.dispatcher)

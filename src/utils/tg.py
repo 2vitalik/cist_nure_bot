@@ -16,8 +16,8 @@ def add_quote(text):
 def tg_send(chat_id, text, pin=False):
     try:
         msg = bot.send_message(chat_id, text,
-                         parse_mode=ParseMode.HTML,
-                         disable_web_page_preview=True)
+                               parse_mode=ParseMode.HTML,
+                               disable_web_page_preview=True)
         if pin:
             bot.pin_chat_message(chat_id, msg.message_id, True)
     except (TimedOut, RetryAfter, NetworkError) as e:
