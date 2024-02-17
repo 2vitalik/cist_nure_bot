@@ -2,7 +2,9 @@ import re
 from collections import defaultdict
 
 from scripts.data.pi_2024_s1 import pi23, pi22, pi21, pi20
+from src.utils.coda_utils import doc
 
+coda_subjects = doc.Subjects.all()
 
 potoks = {
     'pi23': {
@@ -84,6 +86,7 @@ class SubjectParser:
         teachers_data = self.join_pz_and_lb(teachers_data)
         out_data = self.get_out_data(teachers_data)
         print(out_data)
+        self.save_data(short, out_data)
 
     def group_teachers(self, short, long, other):
         grouped_teachers = defaultdict(lambda: defaultdict(list))
@@ -174,6 +177,13 @@ class SubjectParser:
             result += f'{teacher}: {values}\n'
 
         return result
+
+    def save_data(self, short, out_data):
+        for event in coda_subjects:
+            if event['ShortName'] == short:
+                doc.Subjects.update(event['@id'], {
+                    'Teachers': out_data.strip(),
+                })
 
 
 if __name__ == '__main__':
