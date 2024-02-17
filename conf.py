@@ -1,5 +1,7 @@
 
 coda_token = None  # should be set in `local_conf.py`
+coda_doc = None  # should be set in `local_conf.py`
+
 telegram_token = None  # should be set in `local_conf.py`
 telegram_admin = None  # should be set in `local_conf.py`
 
