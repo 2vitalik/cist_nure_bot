@@ -18,11 +18,11 @@ def make_link(href):
         return ''
 
     if re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)', href):
-        title = f'DL'
+        title = f'dl(c)'
     elif re.fullmatch(r'https://dl\.nure\.ua/mod/url/view\.php\?id=(\d+)', href):
-        title = f'DL.U'
+        title = f'dl(u)'
     elif re.fullmatch(r'https://dl\.nure\.ua/mod/attendance/view\.php\?id=(\d+)', href):
-        title = f'DL.A'
+        title = f'dl(a)'
     elif re.fullmatch(r'https://classroom\.google\.com/.*', href):
         title = f'classroom'
     elif re.fullmatch(r'https://t\.me/.*', href):
