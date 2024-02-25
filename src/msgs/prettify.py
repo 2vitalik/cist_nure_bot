@@ -210,6 +210,7 @@ if __name__ == '__main__':  # just for test...
         result[potok_slug] = {}
         for subject, (link, meet) in data.items():
             result[potok_slug][subject] = defaultdict(dict)
+            subject_data = defaultdict(dict)
             for kind in ['лк', 'пз', 'лб']:
                 links_data = defaultdict(list)
                 for group in groups[potok_slug]:
@@ -220,5 +221,15 @@ if __name__ == '__main__':  # just for test...
                 if links_data:
                     for links_key, groups_list in links_data.items():
                         groups_key = ', '.join(groups_list)
-                        result[potok_slug][subject][kind][groups_key] = links_key
+                        subject_data[kind][groups_key] = links_key
+            if subject_data:
+                if subject_data['пз'] == subject_data['лб']:
+                    subject_data['пз,лб'] = subject_data['пз']
+                    subject_data.pop('пз')
+                    subject_data.pop('лб')
+                    if subject_data.get('лк') == subject_data['пз,лб']:
+                        subject_data['*'] = subject_data['лк']
+                        subject_data.pop('лк')
+                        subject_data.pop('пз,лб')
+            result[potok_slug][subject] = subject_data
     print(json.dumps(result, ensure_ascii=False, indent=4))
