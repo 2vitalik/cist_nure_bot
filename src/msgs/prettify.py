@@ -83,8 +83,7 @@ class LinksProcessor:
                     href = two_links[1]
             else:
                 href = dl_links
-            link = make_link(href)
-            links.append(link)
+            links.append(href)
 
         if meet_links:
             # print()
@@ -102,17 +101,11 @@ class LinksProcessor:
 
                 if self.check_filter(cfg, line):
                     # print(f'{cfg} -> {meet_link}')  # fixme: debug
-                    link = make_link(href)
-                    links.append(link)
+                    links.append(href)
                 # else:
                 #     print(f'{cfg} -> -')
 
-        if links:
-            links_text = ", ".join(links)
-            return f'{self.sep}{links_text}'
-        else:
-            # return f'{sep}{room}' if room else ''
-            return ''
+        return links
 
     def check_pz_lb(self, cfg, line):
         max_eng, max_ukr = conf.group_nums[self.group[:len('ПЗПІ-XX')]].values()
@@ -170,12 +163,22 @@ class LinksProcessor:
             return False
 
 
+def get_links_text(links, sep=' → '):
+    if links:
+        links_text = ", ".join([make_link(link) for link in links])
+        return f'{sep}{links_text}'
+    else:
+        # return f'{sep}{room}' if room else ''
+        return ''
+
+
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     icon = get_icon(group, kind)
     links = LinksProcessor(group, subject, kind, room, sep).links
+    links_text = get_links_text(links, sep)
     comment_line = f'\n✍️ {comment}' if comment else ''
 
-    return f'{icon} ({kind}) <b>{subject}</b>{links}{comment_line}'
+    return f'{icon} ({kind}) <b>{subject}</b>{links_text}{comment_line}'
 
 
 def prettify_time_slot(day_table, group, time_key, alarm=False):
