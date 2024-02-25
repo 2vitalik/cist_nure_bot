@@ -39,6 +39,7 @@ def load_potok_subjects():
     subjects = defaultdict(dict)
     for subject, potok_slug, dl_links, meet_links in subjects_entries:
         subjects[potok_slug][subject] = (dl_links, meet_links)
+    subjects = dict(sorted(subjects.items()))
     return subjects
 
 
@@ -55,10 +56,11 @@ def load_groups(potok_slug=None):
 def load_potok_groups():
     groups_entries = \
         json_load(f'{conf.data_path}/coda/json/all_groups.json')
-    groups = defaultdict(list)
+    result = defaultdict(list)
     for group, potok_slug in groups_entries:
-        groups[potok_slug].append(group)
-    return groups
+        result[potok_slug].append(group)
+    return {potok_slug: sorted(groups, key=lambda x: int(x[len('ПЗПІ-XX-'):]))
+            for potok_slug, groups in result.items()}
 
 
 if __name__ == '__main__':
