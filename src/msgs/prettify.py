@@ -176,13 +176,16 @@ if __name__ == '__main__':  # just for test...
     groups = load_groups()
     subjects = load_subjects()
 
-    for subject, data in subjects.items():
-        if data[2]:
-            print(subject, '-' * 40)
-            print(data[2])
-    print('=' * 60)
+    # for subject, data in subjects.items():
+    #     if data[2]:
+    #         print(subject, '-' * 40)
+    #         print(data[2])
+    # print('=' * 60)
 
-    for subject in subjects:
-        for kind in ['лк', 'пз', 'лб']:
-            for group in groups:
-                get_links(group, subject, kind, '', '')
+    for group in groups:
+        # print(group, '=' * 40)
+        for subject in subjects:
+            for kind in ['лк', 'пз', 'лб']:
+                links = get_links(group, subject, kind, '', '')
+                # if links:
+                #     print(subject, kind, ' -> ', links)
