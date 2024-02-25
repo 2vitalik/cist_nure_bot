@@ -1,3 +1,4 @@
+import json
 import re
 from collections import defaultdict
 
@@ -208,7 +209,7 @@ if __name__ == '__main__':  # just for test...
     for potok_slug, data in subjects.items():
         result[potok_slug] = {}
         for subject, (link, meet) in data.items():
-            result[potok_slug][subject] = {}
+            result[potok_slug][subject] = defaultdict(dict)
             for kind in ['лк', 'пз', 'лб']:
                 links_data = defaultdict(list)
                 for group in groups[potok_slug]:
@@ -218,6 +219,6 @@ if __name__ == '__main__':  # just for test...
                         links_data[links_key].append(group[len('ПЗПІ-'):])
                 if links_data:
                     for links_key, groups_list in links_data.items():
-                        print(subject, kind, ' ', links_key)
-                        print(' ', ', '.join(groups_list))
-                        result[potok_slug][subject][kind] = {...}  # todo
+                        groups_key = ', '.join(groups_list)
+                        result[potok_slug][subject][kind][groups_key] = links_key
+    print(json.dumps(result, ensure_ascii=False, indent=4))
