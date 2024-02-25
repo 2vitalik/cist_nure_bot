@@ -38,6 +38,25 @@ groups = {
     #            '6496585_6496598_7197629_6569333',
 }
 
+group_nums = {
+    'ПЗПІ-23': {
+        'max_eng_group': 5,
+        'max_ukr_group': 10,
+    },
+    'ПЗПІ-22': {
+        'max_eng_group': 5,
+        'max_ukr_group': 10,
+    },
+    'ПЗПІ-21': {
+        'max_eng_group': 5,
+        'max_ukr_group': 11,
+    },
+    'ПЗПІ-20': {
+        'max_eng_group': 5,
+        'max_ukr_group': 10,
+    },
+}
+
 group_eng = {
     'ПЗПІ-23-1': True,
     'ПЗПІ-23-2': True,
@@ -208,6 +227,14 @@ icons = {  # should be set in `local_conf.py`
 
 channels = {  # should be set in `local_conf.py`
     'ПЗПІ-19-3': None,
+}
+
+forums = {
+    'ПЗПІ-23': None,
+}
+
+threads = {
+    'ПЗПІ-23': None,
 }
 
 # Paths:
