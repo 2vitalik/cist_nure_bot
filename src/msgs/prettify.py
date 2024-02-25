@@ -3,7 +3,7 @@ from collections import defaultdict
 
 import conf
 from src.data.const import times
-from src.data.load import load_subjects, load_groups
+from src.data.load import load_subjects, load_potok_subjects, load_potok_groups
 from src.utils.tg import tg_send
 
 
@@ -195,22 +195,29 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
 
 
 if __name__ == '__main__':  # just for test...
-    subjects = load_subjects()
-
+    # subjects = load_subjects()
     # for subject, data in subjects.items():
     #     if data[2]:
     #         print(subject, '-' * 40)
     #         print(data[2])
     # print('=' * 60)
 
-    for subject, (potok_slug, link, meet) in subjects.items():
-        for kind in ['лк', 'пз', 'лб']:
-            data = defaultdict(list)
-            for group in load_groups(potok_slug):
-                links = get_links_text(LinksProcessor(group, subject, kind, '', '').links)
-                if links:
-                    data[links].append(group[len('ПЗПІ-'):])
-            if data:
-                for links, groups in data.items():
-                    print(subject, kind, ' ', links)
-                    print(' ', ', '.join(sorted(groups)))
+    result = {}
+    groups = load_potok_groups()
+    subjects = load_potok_subjects()
+    for potok_slug, data in subjects.items():
+        result[potok_slug] = {}
+        for subject, (link, meet) in data.items():
+            result[potok_slug][subject] = {}
+            for kind in ['лк', 'пз', 'лб']:
+                links_data = defaultdict(list)
+                for group in groups[potok_slug]:
+                    links = LinksProcessor(group, subject, kind, '', '').links
+                    if links:
+                        links_key = ', '.join(links)
+                        links_data[links_key].append(group[len('ПЗПІ-'):])
+                if links_data:
+                    for links_key, groups_list in links_data.items():
+                        print(subject, kind, ' ', links_key)
+                        print(' ', ', '.join(groups_list))
+                        result[potok_slug][subject][kind] = {...}  # todo
