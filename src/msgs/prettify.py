@@ -1,10 +1,8 @@
-import json
 import re
-from collections import defaultdict
 
 import conf
 from src.data.const import times
-from src.data.load import load_subjects, load_potok_subjects, load_potok_groups
+from src.data.load import load_subjects
 from src.utils.tg import tg_send
 
 
@@ -196,40 +194,9 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
 
 
 if __name__ == '__main__':  # just for test...
-    # subjects = load_subjects()
-    # for subject, data in subjects.items():
-    #     if data[2]:
-    #         print(subject, '-' * 40)
-    #         print(data[2])
-    # print('=' * 60)
-
-    result = {}
-    groups = load_potok_groups()
-    subjects = load_potok_subjects()
-    for potok_slug, data in subjects.items():
-        result[potok_slug] = {}
-        for subject, (link, meet) in data.items():
-            result[potok_slug][subject] = defaultdict(dict)
-            subject_data = defaultdict(dict)
-            for kind in ['лк', 'пз', 'лб']:
-                links_data = defaultdict(list)
-                for group in groups[potok_slug]:
-                    links = LinksProcessor(group, subject, kind, '', '').links
-                    if links:
-                        links_key = ', '.join(links)
-                        links_data[links_key].append(group[len('ПЗПІ-'):])
-                if links_data:
-                    for links_key, groups_list in links_data.items():
-                        groups_key = ', '.join(groups_list)
-                        subject_data[kind][groups_key] = links_key
-            if subject_data:
-                if subject_data['пз'] == subject_data['лб']:
-                    subject_data['пз,лб'] = subject_data['пз']
-                    subject_data.pop('пз')
-                    subject_data.pop('лб')
-                    if subject_data.get('лк') == subject_data['пз,лб']:
-                        subject_data['*'] = subject_data['лк']
-                        subject_data.pop('лк')
-                        subject_data.pop('пз,лб')
-            result[potok_slug][subject] = subject_data
-    print(json.dumps(result, ensure_ascii=False, indent=4))
+    subjects = load_subjects()
+    for subject, data in subjects.items():
+        if data[2]:
+            print(subject, '-' * 40)
+            print(data[2])
+    print('=' * 60)
