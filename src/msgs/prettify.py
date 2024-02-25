@@ -60,101 +60,113 @@ def get_icon(group, kind):
     return icons.get(kind, '❔')
 
 
-def get_links(group, subject, kind, room, sep):
-    dl_links, meet_links = get_subject_links(subject)
+class LinksProcessor:
 
-    links = []
-    if dl_links:
-        if '\n' in dl_links:
-            two_links = dl_links.split('\n')
-            if conf.group_eng[group]:
-                href = two_links[0]
+    def __init__(self, group, subject, kind, room, sep):
+        self.group = group
+        self.subject = subject
+        self.kind = kind
+        self.room = room
+        self.sep = sep
+
+        dl_links, meet_links = get_subject_links(subject)
+        self.links = self.process_links(dl_links, meet_links)
+
+    def process_links(self, dl_links, meet_links):
+        links = []
+        if dl_links:
+            if '\n' in dl_links:
+                two_links = dl_links.split('\n')
+                if conf.group_eng[self.group]:
+                    href = two_links[0]
+                else:
+                    href = two_links[1]
             else:
-                href = two_links[1]
+                href = dl_links
+            link = make_link(href)
+            links.append(link)
+
+        if meet_links:
+            # print()
+            # print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
+
+            for line in meet_links.split('\n'):
+                m = re.fullmatch(r'\[(.*)]: (https://.*)', line)  # fixme: meet.google.com/\w{3}-\w{4}-\w{3}
+                if not m:
+                    msg = f'Wrong meet-filter line: {line}\n ' \
+                          f'[{self.subject}] ({self.kind}) - {self.group}'
+                    tg_send(conf.telegram_admin, msg)
+                    continue
+
+                cfg, href = m.groups()
+
+                if self.check_filter(cfg, line):
+                    # print(f'{cfg} -> {meet_link}')  # fixme: debug
+                    link = make_link(href)
+                    links.append(link)
+                # else:
+                #     print(f'{cfg} -> -')
+
+        if links:
+            links_text = ", ".join(links)
+            return f'{self.sep}{links_text}'
         else:
-            href = dl_links
-        link = make_link(href)
-        links.append(link)
+            # return f'{sep}{room}' if room else ''
+            return ''
 
-    if meet_links:
-        # print()
-        # print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
-
-        for line in meet_links.split('\n'):
-            m = re.fullmatch(r'\[(.*)]: (https://meet.google.com/\w{3}-\w{4}-\w{3})', line)
-            if not m:
-                msg = f'Never should happen: {line}\n ' \
-                      f'[{subject}] ({kind}) - {group}'
-                tg_send(conf.telegram_admin, msg)
+    def check_pz_lb(self, cfg, line):
+        raw_nums = cfg.split(',')
+        nums = []
+        for num in raw_nums:
+            if num == self.kind:
                 continue
-
-            def check_pz_lb(kind):
-                raw_nums = cfg.split(',')
-                nums = []
-                for num in raw_nums:
-                    if num == kind:
-                        continue
-                    elif re.fullmatch(r'\d+', num):
-                        nums.append(num)
-                    else:
-                        m = re.fullmatch(r'(\d+)-(\d+)', num)
-                        if m:
-                            a, b = m.groups()
-                            nums.extend(map(str, range(int(a), int(b) + 1)))
-                        else:
-                            msg = f'Wrong value in cfg ("{cfg}"): {line}\n ' \
-                                  f'[{subject}] ({kind}) - {group}'
-                            tg_send(conf.telegram_admin, msg)
-                            continue
-
-                curr_num = group[len('ПЗПІ-XX-'):]
-                return curr_num in nums
-
-            cfg, href = m.groups()
-            eng = conf.group_eng[group]
-
-            if '?' in cfg:
-                ok = False
-            elif kind == 'лк':
-                if cfg in ['*', 'лк']:
-                    ok = True
-                elif cfg == 'лк-А':
-                    ok = eng
-                elif cfg == 'лк-У':
-                    ok = not eng
-                else:
-                    ok = False
-            elif kind in ['пз', 'лб']:
-                other_kind = {'пз': 'лб', 'лб': 'пз'}[kind]
-                if cfg in ['*', kind, 'пз,лб', 'лб,пз']:
-                    ok = True
-                elif cfg in ['лк', 'лк-А', 'лк-У']:
-                    ok = False
-                elif kind not in cfg and other_kind in cfg:
-                    ok = False
-                else:
-                    ok = check_pz_lb(kind)
+            elif re.fullmatch(r'\d+', num):
+                nums.append(num)
             else:
-                ok = False
+                m = re.fullmatch(r'(\d+)-(\d+)', num)
+                if m:
+                    a, b = m.groups()
+                    nums.extend(map(str, range(int(a), int(b) + 1)))
+                else:
+                    msg = f'Wrong value in cfg ("{cfg}"): {line}\n ' \
+                          f'[{self.subject}] ({self.kind}) - {self.group}'
+                    tg_send(conf.telegram_admin, msg)
+                    continue
 
-            if ok:
-                # print(f'{cfg} -> {meet_link}')  # fixme: debug
-                link = make_link(href)
-                links.append(link)
-            # else:
-            #     print(f'{cfg} -> -')
+        curr_num = self.group[len('ПЗПІ-XX-'):]
+        return curr_num in nums
 
-    if links:
-        links_text = ", ".join(links)
-        return f'{sep}{links_text}'
-    else:
-        # return f'{sep}{room}' if room else ''
-        return ''
+    def check_filter(self, cfg, line):
+        eng = conf.group_eng[self.group]
+
+        if '?' in cfg:
+            return False
+        elif self.kind == 'лк':
+            if cfg in ['*', 'лк']:
+                return True
+            elif cfg == 'лк-А':
+                return eng
+            elif cfg == 'лк-У':
+                return not eng
+            else:
+                return False
+        elif self.kind in ['пз', 'лб']:
+            other_kind = {'пз': 'лб', 'лб': 'пз'}[self.kind]
+            if cfg in ['*', self.kind, 'пз,лб', 'лб,пз']:
+                return True
+            elif cfg in ['лк', 'лк-А', 'лк-У']:
+                return False
+            elif self.kind not in cfg and other_kind in cfg:
+                return False
+            else:
+                return self.check_pz_lb(cfg, line)
+        else:
+            return False
 
 
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     icon = get_icon(group, kind)
-    links = get_links(group, subject, kind, room, sep)
+    links = LinksProcessor(group, subject, kind, room, sep).links
     comment_line = f'\n✍️ {comment}' if comment else ''
 
     return f'{icon} ({kind}) <b>{subject}</b>{links}{comment_line}'
@@ -186,6 +198,6 @@ if __name__ == '__main__':  # just for test...
         # print(group, '=' * 40)
         for subject in subjects:
             for kind in ['лк', 'пз', 'лб']:
-                links = get_links(group, subject, kind, '', '')
+                links = LinksProcessor(group, subject, kind, '', '').links
                 # if links:
                 #     print(subject, kind, ' -> ', links)
