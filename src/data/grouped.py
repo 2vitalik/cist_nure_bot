@@ -5,6 +5,19 @@ from src.data.load import load_potok_groups, load_potok_subjects
 from src.msgs.prettify import LinksProcessor
 
 
+def join_equal_kinds(subject_data):
+    if not subject_data:
+        return
+    if subject_data['пз'] == subject_data['лб']:
+        subject_data['пз,лб'] = subject_data['пз']
+        subject_data.pop('пз')
+        subject_data.pop('лб')
+        if subject_data.get('лк') == subject_data['пз,лб']:
+            subject_data['*'] = subject_data['лк']
+            subject_data.pop('лк')
+            subject_data.pop('пз,лб')
+
+
 def dict_potok_subject_kind_groups_links():
     result = {}
     groups = load_potok_groups()
@@ -25,20 +38,12 @@ def dict_potok_subject_kind_groups_links():
                     for links_key, groups_list in links_data.items():
                         groups_key = ', '.join(groups_list)
                         subject_data[kind][groups_key] = links_key
-            if subject_data:
-                if subject_data['пз'] == subject_data['лб']:
-                    subject_data['пз,лб'] = subject_data['пз']
-                    subject_data.pop('пз')
-                    subject_data.pop('лб')
-                    if subject_data.get('лк') == subject_data['пз,лб']:
-                        subject_data['*'] = subject_data['лк']
-                        subject_data.pop('лк')
-                        subject_data.pop('пз,лб')
+            join_equal_kinds(subject_data)
             result[potok_slug][subject] = subject_data
 
     return result
 
 
 if __name__ == '__main__':
-    result = dict_potok_subject_kind_groups_links()
-    print(json.dumps(result, ensure_ascii=False, indent=4))
+    print(json.dumps(dict_potok_subject_kind_groups_links(),
+                     ensure_ascii=False, indent=4))
