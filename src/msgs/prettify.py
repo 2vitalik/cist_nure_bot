@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict
 
 import conf
 from src.data.const import times
@@ -194,7 +195,6 @@ def prettify_time_slot(day_table, group, time_key, alarm=False):
 
 
 if __name__ == '__main__':  # just for test...
-    groups = load_groups()
     subjects = load_subjects()
 
     # for subject, data in subjects.items():
@@ -203,10 +203,14 @@ if __name__ == '__main__':  # just for test...
     #         print(data[2])
     # print('=' * 60)
 
-    for group in groups:
-        # print(group, '=' * 40)
-        for subject in subjects:
-            for kind in ['лк', 'пз', 'лб']:
-                links = LinksProcessor(group, subject, kind, '', '').links
-                # if links:
-                #     print(subject, kind, ' -> ', links)
+    for subject, (potok_slug, link, meet) in subjects.items():
+        for kind in ['лк', 'пз', 'лб']:
+            data = defaultdict(list)
+            for group in load_groups(potok_slug):
+                links = get_links_text(LinksProcessor(group, subject, kind, '', '').links)
+                if links:
+                    data[links].append(group[len('ПЗПІ-'):])
+            if data:
+                for links, groups in data.items():
+                    print(subject, kind, ' ', links)
+                    print(' ', ', '.join(sorted(groups)))
