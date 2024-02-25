@@ -33,12 +33,13 @@ def load_subjects():
     return subjects
 
 
-def load_groups():
+def load_groups(potok_slug=None):
     groups_entries = \
         json_load(f'{conf.data_path}/coda/json/all_groups.json')
     groups = []
-    for group, potok_slug in groups_entries:
-        groups.append(group)
+    for group, group_potok_slug in groups_entries:
+        if potok_slug and group_potok_slug == potok_slug:
+            groups.append(group)
     return groups
 
 
