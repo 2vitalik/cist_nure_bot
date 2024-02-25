@@ -115,6 +115,8 @@ class LinksProcessor:
             return ''
 
     def check_pz_lb(self, cfg, line):
+        max_eng, max_ukr = conf.group_nums[self.group[:len('ПЗПІ-XX')]].values()
+
         raw_nums = cfg.split(',')
         nums = []
         for num in raw_nums:
@@ -122,6 +124,10 @@ class LinksProcessor:
                 continue
             elif re.fullmatch(r'\d+', num):
                 nums.append(num)
+            elif num == 'А':
+                nums.extend(map(str, range(1, max_eng + 1)))
+            elif num == 'У':
+                nums.extend(map(str, range(max_eng, max_ukr + 1)))
             else:
                 m = re.fullmatch(r'(\d+)-(\d+)', num)
                 if m:
@@ -144,9 +150,9 @@ class LinksProcessor:
         elif self.kind == 'лк':
             if cfg in ['*', 'лк']:
                 return True
-            elif cfg == 'лк-А':
+            elif cfg in ['лк-А', 'А']:
                 return eng
-            elif cfg == 'лк-У':
+            elif cfg in ['лк-У', 'У']:
                 return not eng
             else:
                 return False
