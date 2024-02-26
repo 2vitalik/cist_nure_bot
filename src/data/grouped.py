@@ -18,6 +18,24 @@ def join_equal_kinds(subject_data):
             subject_data.pop('пз,лб')
 
 
+def convert_ranges(groups):
+    i = 0
+    while i < len(groups) - 1:
+        j = i + 1
+        while j < len(groups) and groups[j] - groups[j-1] == 1:
+            j += 1
+        if j != i + 1:
+            groups[i] = f'{groups[i]}-{groups[j-1]}'
+            del groups[i+1:j]
+        i += 1
+
+
+def shorten_group_list(groups):
+    groups = [int(group[3:]) for group in groups]
+    convert_ranges(groups)
+    return ', '.join(map(str, groups))
+
+
 def dict_potok_subject_kind_groups_links():
     result = {}
     groups = load_potok_groups()
@@ -36,7 +54,7 @@ def dict_potok_subject_kind_groups_links():
                         links_data[links_key].append(group[len('ПЗПІ-'):])
                 if links_data:
                     for links_key, groups_list in links_data.items():
-                        groups_key = ', '.join(groups_list)
+                        groups_key = shorten_group_list(groups_list)
                         subject_data[kind][groups_key] = links_key
             join_equal_kinds(subject_data)
             result[potok_slug][subject] = subject_data
