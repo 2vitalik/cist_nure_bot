@@ -62,19 +62,23 @@ def get_icon(group, kind):
 
 class LinksProcessor:
 
-    def __init__(self, group, subject, kind, room, sep):
+    def __init__(self, group, subject, kind, room, sep,
+                 need_dl=True, need_meet=True):
         self.group = group
         self.subject = subject
         self.kind = kind
         self.room = room
         self.sep = sep
+        self.need_dl = need_dl
+        self.need_meet = need_meet
 
         dl_links, meet_links = get_subject_links(subject)
         self.links = self.process_links(dl_links, meet_links)
 
     def process_links(self, dl_links, meet_links):
         links = []
-        if dl_links:
+
+        if self.need_dl and dl_links:
             if '\n' in dl_links:
                 two_links = dl_links.split('\n')
                 if conf.group_eng[self.group]:
@@ -85,7 +89,7 @@ class LinksProcessor:
                 href = dl_links
             links.append(href)
 
-        if meet_links:
+        if self.need_meet and meet_links:
             # print()
             # print(f'[{subject}] ({kind}) - {group}')  # fixme: debug
 
