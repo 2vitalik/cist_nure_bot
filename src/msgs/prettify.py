@@ -21,6 +21,8 @@ def make_link(href):
         title = f'dl(c)'
     elif re.fullmatch(r'https://dl\.nure\.ua/mod/url/view\.php\?id=(\d+)', href):
         title = f'dl(u)'
+    elif re.fullmatch(r'https://dl\.nure\.ua/mod/forum/view\.php\?id=(\d+)', href):
+        title = f'dl(f)'
     elif re.fullmatch(r'https://dl\.nure\.ua/mod/attendance/view\.php\?id=(\d+)', href):
         title = f'dl(a)'
     elif re.fullmatch(r'https://classroom\.google\.com/.*', href):
