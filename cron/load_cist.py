@@ -12,7 +12,9 @@ from src.utils.slack import slack
 @slack('load_cist')
 def load_cist():
     for potok_slug, group_ids in conf.groups.items():
-        download_cist(group_ids, conf.date_from, conf.date_to, potok_slug)
+        ok = download_cist(group_ids, conf.date_from, conf.date_to, potok_slug)
+        if not ok:
+            return
         save_cist_parsed(potok_slug, *parse_cist_csv(potok_slug))
 
 

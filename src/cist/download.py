@@ -31,7 +31,7 @@ def download_cist(groups, date_from, date_to, potok_slug):
         else:
             slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
                          f' `{potok_slug}`: *{type(e).__name__}*: {e}')
-        return
+        return False
 
     active_filename, backup_filename = get_filenames(path, potok_slug, 'csv')
 
@@ -47,11 +47,13 @@ def download_cist(groups, date_from, date_to, potok_slug):
             write(error_filename, content)
             slack_status(f'⚠️ cist.nure.ua вернул ошибку для'
                          f' `{potok_slug}`: *"{error_pattern}"*')
-            return
+            return False
 
     if write_changed(active_filename, content):
         slack_status(f'✔️ *cist/csv* data has changed for `{potok_slug}`')
         write(backup_filename, content)
+
+    return True
 
 
 if __name__ == '__main__':
