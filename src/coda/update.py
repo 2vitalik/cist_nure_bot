@@ -24,7 +24,7 @@ def group_slot(rows, source):
             if new_kind == kind:
                 # never should happen
                 slack_error(f'🚫 Unknown kind: "{kind}"')
-                time.sleep(0.5)
+                time.sleep(1)
             coda_id = '?'
             kind = new_kind
         elif source == 'coda':
@@ -78,11 +78,11 @@ def update_coda():
                 slack_status(f'➕ `{potok_slug}`  new subject: *"{subject}"*')
                 coda_subjects.append({'Сокращение': subject,
                                       'potok_slug': potok_slug})
-                time.sleep(0.5)
+                time.sleep(1)
         removed_subjects = set(old_subjects) - set(new_subjects)
         for subject in removed_subjects:
             slack_error(f'❌ `{potok_slug}`  removed subject: *"{subject}"*')
-            time.sleep(0.5)
+            time.sleep(1)
             # todo: mark as "removed" in coda?
 
         for group in new_groups:
@@ -91,7 +91,7 @@ def update_coda():
                 spec, year, num = group.split('-')
                 coda_groups.append({'Спец': spec, "Год": year, "Номер": num,
                                     'potok_slug': potok_slug})
-                time.sleep(0.5)
+                time.sleep(1)
         removed_groups = set(old_groups) - set(new_groups)
         for subject in removed_groups:
             slack_error(f'❌ `{potok_slug}`  removed group: *"{subject}"*')
@@ -150,7 +150,7 @@ def update_coda():
                                 line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
-                            time.sleep(0.5)
+                            time.sleep(1)
 
                 if changes and not conf.temporary_disable_tg:
                     tg_send(channel_id, f'{header}\n{changes}')
@@ -204,7 +204,7 @@ def update_coda():
                                 line = prettify_line(group, time_from,
                                                      subject, kind, room)
                                 changes += f'❌ {line}\n'
-                            time.sleep(0.5)
+                            time.sleep(1)
 
                     for (subject, kind) in new_slot:
                         if (subject, kind) not in old_slot:
@@ -255,7 +255,7 @@ def update_coda():
                                                          subject, kind,
                                                          old_room)
                                     changes += f'🌀 {line} → {new_room}\n'
-                                time.sleep(0.5)
+                                time.sleep(1)
 
                 if changes and not conf.temporary_disable_tg:
                     tg_send(channel_id, f'{header}\n{changes}')
