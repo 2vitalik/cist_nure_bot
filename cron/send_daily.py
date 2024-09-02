@@ -81,8 +81,10 @@ def send_daily():
     # now = datetime(2022, 2, 13)  # just for debug
     # now = datetime(2022, 8, 28)  # just for debug
     # now = datetime(2023, 2, 12)  # to emulate Sunday initial start
+    # now = datetime(2023, 3, 19)  # to emulate Sunday initial start
+    now = datetime(2024, 9, 1)  # to emulate Sunday initial start
     is_sunday = now.weekday() == 6
-    tomorrow = now + timedelta(days=1)
+    tomorrow = now + timedelta(days=2)  # fixme: temporary
     data = load_records()
     for group, channel_id in conf.channels.items():
         if is_sunday:
