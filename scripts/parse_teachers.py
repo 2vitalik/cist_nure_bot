@@ -88,6 +88,9 @@ class SubjectParser:
         print('-' * 100)
 
         grouped_teachers = self.group_teachers(short, long, other)
+        if not grouped_teachers:
+            print('No ПЗПІ groups found')
+            return
         teachers_data = self.get_teachers_data(grouped_teachers)
         teachers_data = self.join_pz_and_lb(teachers_data)
         out_data = self.get_out_data(teachers_data)
