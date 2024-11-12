@@ -127,7 +127,13 @@ class SubjectParser:
 
             else:
                 groups = re.sub('ПЗПІ-2\d-', '', groups)
+                groups = re.sub('ЕЕКи-24-1;ПЗПІи-24-1;ЕСТМи-24-1;АКТСІи-24-1', '', groups)
+                groups = re.sub(';ПЗПІи-24-1', '', groups)
+                groups = re.sub(';ІТШІ-24-3', '', groups)
                 groups = re.sub('ІПЗм-2\d-', '', groups)
+                if not groups:
+                    # added `if` for the case when groups are not `ПЗПІ` completely
+                    continue
                 groups = re.split('[,;]', groups)
                 # m = re.fullmatch(r'[\d,;]+', groups)
                 # if not m:
