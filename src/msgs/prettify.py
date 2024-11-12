@@ -186,8 +186,8 @@ def get_links_text(links, sep=' → '):
 
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     icon = get_icon(group, kind)
-    # links = LinksProcessor(group, subject, kind, room, sep).links
-    links = get_links(group, subject, kind)
+    links = LinksProcessor(group, subject, kind, room, sep).links
+    # links = get_links(group, subject, kind)
     links_text = get_links_text(links, sep)
     comment_line = f'\n✍️ {comment}' if comment else ''
 
