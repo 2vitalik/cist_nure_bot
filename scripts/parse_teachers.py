@@ -1,4 +1,5 @@
 import re
+import time
 from collections import defaultdict
 
 from scripts.data.pi_2024_s1 import pi23, pi22, pi21, pi20
@@ -184,6 +185,7 @@ class SubjectParser:
                 doc.Subjects.update(subject['@id'], {
                     'Teachers': out_data.strip(),
                 })
+                time.sleep(2)
 
 
 if __name__ == '__main__':
