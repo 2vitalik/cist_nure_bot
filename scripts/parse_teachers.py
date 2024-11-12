@@ -179,9 +179,9 @@ class SubjectParser:
         return result
 
     def save_data(self, short, out_data):
-        for event in coda_subjects:
-            if event['ShortName'] == short:
-                doc.Subjects.update(event['@id'], {
+        for subject in coda_subjects:
+            if subject['ShortName'] == short:
+                doc.Subjects.update(subject['@id'], {
                     'Teachers': out_data.strip(),
                 })
 
