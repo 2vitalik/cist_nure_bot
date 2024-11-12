@@ -3,6 +3,7 @@ import re
 import conf
 from src.data.const import times
 from src.data.load import load_subjects
+from src.utils.mongo_db import db
 from src.utils.tg import tg_send
 
 
@@ -169,6 +170,11 @@ class LinksProcessor:
             return False
 
 
+def get_links(group, subject, kind):
+    prefix, group_number = group.rsplit('-', 1)
+    return db.entries.get_links(prefix, subject, kind, group_number)
+
+
 def get_links_text(links, sep=' → '):
     if links:
         links_text = ", ".join([make_link(link) for link in links])
@@ -180,7 +186,8 @@ def get_links_text(links, sep=' → '):
 
 def prettify_lesson(group, subject, kind, room, comment, sep=' → '):
     icon = get_icon(group, kind)
-    links = LinksProcessor(group, subject, kind, room, sep).links
+    # links = LinksProcessor(group, subject, kind, room, sep).links
+    links = get_links(group, subject, kind)
     links_text = get_links_text(links, sep)
     comment_line = f'\n✍️ {comment}' if comment else ''
 
