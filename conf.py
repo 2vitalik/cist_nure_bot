@@ -6,6 +6,8 @@ coda_doc = None  # should be set in `local_conf.py`
 telegram_token = None  # should be set in `local_conf.py`
 telegram_admin = None  # should be set in `local_conf.py`
 
+mongo_cluster_secret = None  # should be set in `local_conf.py`
+
 slack_hooks = {  # should be set in `local_conf.py`
     'errors': None,
     'status': None,
@@ -14,6 +16,7 @@ slack_hooks = {  # should be set in `local_conf.py`
 }
 
 semester = '2024-2'
+mongo_semester = '2024-p2'
 date_from = '01.09.2024'
 date_to = '01.02.2025'
 
