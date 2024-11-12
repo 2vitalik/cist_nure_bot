@@ -34,7 +34,7 @@ class EntriesTable:
         links = []
         for _kind, _groups, _links in entries:  # todo: fix order (Загальне first)
             if (kind.capitalize() in _kind or _kind == ['*']) \
-                    and (group in _groups or _groups == ['*']):
+                    and (group in _groups or _groups == ['*'] or _groups == ['0']):
                 if _links:
                     links.extend([link.strip() for link in _links.split('\n')])
         return links
