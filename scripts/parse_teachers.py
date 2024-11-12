@@ -2,12 +2,17 @@ import re
 import time
 from collections import defaultdict
 
-from scripts.data.pi_2024_s1 import pi23, pi22, pi21, pi20
+from scripts.data.pi_2024_s2 import pi24, pi23, pi22, pi21
 from src.utils.coda_utils import doc
 
 coda_subjects = doc.Subjects.all()
 
 potoks = {
+    'pi24': {
+        'input_data': pi24,
+        'max_eng_group': 3,
+        'max_ukr_group': 7,
+    },
     'pi23': {
         'input_data': pi23,
         'max_eng_group': 5,
@@ -23,11 +28,11 @@ potoks = {
         'max_eng_group': 5,
         'max_ukr_group': 11,
     },
-    'pi20': {
-        'input_data': pi20,
-        'max_eng_group': 5,
-        'max_ukr_group': 10,
-    },
+    # 'pi20': {
+    #     'input_data': pi20,
+    #     'max_eng_group': 5,
+    #     'max_ukr_group': 10,
+    # },
     # 'pim22': {
     #     'input_data': pim22,
     #     'max_eng_group': 6,
