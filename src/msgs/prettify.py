@@ -18,6 +18,9 @@ def make_link(href):
     if not href or href == '?':
         return ''
 
+    if not href.startswith('http'):
+        return ''
+
     if re.fullmatch(r'https://dl\.nure\.ua/course/view\.php\?id=(\d+)', href):
         title = f'dl(c)'
     elif re.fullmatch(r'https://dl\.nure\.ua/mod/url/view\.php\?id=(\d+)', href):
