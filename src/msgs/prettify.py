@@ -32,7 +32,7 @@ def make_link(href):
         title = f'telegram'
     elif re.fullmatch(r'https://meet\.google\.com/.*', href):
         title = f'meet'
-    elif re.fullmatch(r'https://nure-ua\.zoom\.us/.*', href):
+    elif re.fullmatch(r'https://[\w-]+\.zoom\.us/.*', href):
         title = f'zoom'
     else:
         title = 'link'
