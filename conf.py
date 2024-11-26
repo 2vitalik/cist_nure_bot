@@ -20,6 +20,8 @@ mongo_semester = '2024-p2'
 date_from = '01.09.2024'
 date_to = '01.02.2025'
 
+google_chat_webhook = None  # should be set in `local_conf.py`
+
 temporary_disable_tg = False
 temporary_disable_slack_new = False
 
