@@ -18,8 +18,7 @@ slack_hooks = {  # should be set in `local_conf.py`
 semester = '2025-1'
 mongo_semester = '2025-p1'
 date_from = '01.02.2025'
-date_to = '17.02.2025'    # fixme
-# date_to = '01.08.2025'
+date_to = '01.08.2025'
 
 google_chat_webhook = None  # should be set in `local_conf.py`
 
