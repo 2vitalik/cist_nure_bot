@@ -4,6 +4,7 @@ from shared_utils.api.slack.core import post_to_slack
 
 
 def slack_status(message):
+    print(message)
     post_to_slack('status', message)
 
 
