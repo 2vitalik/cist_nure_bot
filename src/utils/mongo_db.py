@@ -9,7 +9,7 @@ class MongoDB:
     def __init__(self):
         self.client = MongoClient(conf.mongo_cluster_secret)
         self.db = self.client['nure_links']
-        self.entries = EntriesTable(self.db['entries'])
+        self.entries = EntriesTable(self.db['links_entries'])
 
 
 class EntriesTable:
