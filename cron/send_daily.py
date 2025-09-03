@@ -86,14 +86,14 @@ def send_daily():
     # now = datetime(2024, 11, 10)  # to emulate Sunday initial start
     # now = datetime(2025, 8, 31)   # to emulate Sunday initial start
     is_sunday = now.weekday() == 6
-    tomorrow = now + timedelta(days=1)
+    tomorrow = datetime.now() + timedelta(days=1)
     data = load_records()
     for group, channel_id in conf.channels.items():
         if is_sunday:
             send_weekly()
 
         message, has_items = pretty_day(tomorrow)
-        url_day = get_url(group, now + timedelta(days=1), 1)
+        url_day = get_url(group, tomorrow, 1)
         url_semester = get_url_semester(group)
         message += f'\n🌐 <b>cist</b> — <a href="{url_day}">day</a> & ' \
                    f'<a href="{url_semester}">semester</a>\n' \
