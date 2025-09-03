@@ -78,11 +78,13 @@ def send_daily():
         return message, has_items
 
     now = datetime.now()
-    # now = datetime(2022, 2, 13)  # just for debug
-    # now = datetime(2022, 8, 28)  # just for debug
-    # now = datetime(2023, 2, 12)  # to emulate Sunday initial start
-    # now = datetime(2023, 3, 19)  # to emulate Sunday initial start
-    # now = datetime(2024, 9, 1)  # to emulate Sunday initial start
+    # now = datetime(2022, 2, 13)   # just for debug
+    # now = datetime(2022, 8, 28)   # just for debug
+    # now = datetime(2023, 2, 12)   # to emulate Sunday initial start
+    # now = datetime(2023, 3, 19)   # to emulate Sunday initial start
+    # now = datetime(2024, 9, 1)    # to emulate Sunday initial start
+    # now = datetime(2024, 11, 10)  # to emulate Sunday initial start
+    # now = datetime(2025, 8, 31)   # to emulate Sunday initial start
     is_sunday = now.weekday() == 6
     tomorrow = now + timedelta(days=1)
     data = load_records()
