@@ -67,6 +67,7 @@ def parse_cist_csv(potok_slug):
         rest = rest.replace('Екс в Semantic Web', 'Екс в Semantic Web')
         rest = rest.replace('ТIT (ІОТ', 'ТIT (ІОТ')
         rest = rest.replace('У ІТ', 'У ІТ')
+        rest = rest.replace('Гта Г', 'Гта Г')
 
         # print(rest)  # fixme: just for debugging
         values = rest.split(' ')
