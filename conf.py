@@ -15,10 +15,10 @@ slack_hooks = {  # should be set in `local_conf.py`
     'callbacks': None,
 }
 
-semester = '2025-2'
-mongo_semester = '2025-p2'
-date_from = '01.09.2025'
-date_to = '01.02.2026'
+semester = '2026-1'
+mongo_semester = '2026-p1'
+date_from = '01.02.2026'
+date_to = '01.03.2026'
 
 google_chat_webhook = None  # should be set in `local_conf.py`
 
